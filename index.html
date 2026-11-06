@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tenis 4'lü Turnuva Takip</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-inner: #1a243b;
+      --border: #23314f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #22c55e;
+      --primary-glow: rgba(34, 197, 94, 0.25);
+      --accent: #eab308;
+      --danger: #ef4444;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 80px; min-height: 100vh; }
+    
+    header { background: #0f172a; border-bottom: 1px solid var(--border); padding: 16px; text-align: center; position: sticky; top: 0; z-index: 50; }
+    header h1 { font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
+    
+    .nav-tabs { display: flex; background: #0d1527; border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 40; }
+    .tab-btn { flex: 1; padding: 13px 6px; font-size: 0.82rem; font-weight: 700; text-align: center; border: none; background: none; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(34, 197, 94, 0.05); }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .card-title { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+    
+    .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px; }
+    input[type="text"], input[type="date"] { width: 100%; padding: 11px; background: var(--card-inner); border: 1px solid var(--border); border-radius: 9px; font-size: 0.9rem; color: #fff; outline: none; }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; border: none; transition: 0.15s; }
+    .btn-primary { background: var(--primary); color: #052e16; font-weight: 800; }
+    .btn-primary:active { opacity: 0.9; transform: scale(0.98); }
+    .btn-secondary { background: var(--card-inner); color: #cbd5e1; border: 1px solid var(--border); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: #cbd5e1; }
+    .btn-sm { padding: 8px 12px; font-size: 0.78rem; width: auto; border-radius: 8px; }
+
+    /* Match Cards */
+    .match-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; background: var(--card); }
+    .match-header { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
+    .resting-badge { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); padding: 2px 8px; border-radius: 12px; font-size: 0.72rem; }
+    .players-row { display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 1.1rem; margin: 12px 0; color: #fff; }
+    .vs-tag { color: var(--primary); font-size: 0.75rem; background: rgba(34, 197, 94, 0.12); padding: 3px 8px; border-radius: 6px; }
+    
+    .score-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .score-btn { padding: 10px 4px; border: 1px solid var(--border); background: var(--card-inner); color: #e2e8f0; border-radius: 9px; font-size: 0.9rem; font-weight: 800; cursor: pointer; transition: 0.15s; }
+    .score-btn.active { background: var(--primary); color: #052e16; border-color: var(--primary); box-shadow: 0 0 12px var(--primary-glow); }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 8px; }
+    th { text-align: left; padding: 10px 6px; background: var(--card-inner); color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+    td { padding: 12px 6px; border-bottom: 1px solid var(--border); color: #e2e8f0; }
+    .rank-num { font-weight: 900; color: var(--primary); width: 22px; }
+
+    /* Live Counter Modal */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+    .modal.open { display: flex; }
+    .modal-content { background: var(--card); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 400px; padding: 22px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .point-display { display: flex; justify-content: space-around; align-items: center; margin: 24px 0; }
+    .point-box { font-size: 2.6rem; font-weight: 900; color: var(--primary); min-width: 80px; text-shadow: 0 0 15px var(--primary-glow); }
+    .live-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .live-btn { padding: 15px; font-size: 1.05rem; font-weight: 800; border-radius: 12px; border: 1px solid var(--primary); background: rgba(34, 197, 94, 0.1); color: var(--primary); cursor: pointer; transition: 0.15s; }
+    .live-btn:active { background: var(--primary); color: #052e16; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎾 Tenis 4'lü Turnuva Takip</h1>
+    <p>Dengeli Dinlenme & 2 Oyunluk Eşleşme</p>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('tab-matches', this)">Maçlar & Skor</button>
+    <button class="tab-btn" onclick="switchTab('tab-standings', this)">Puan Durumu</button>
+    <button class="tab-btn" onclick="switchTab('tab-history', this)">Seans Geçmişi</button>
+  </nav>
+
+  <div class="container">
+    
+    <!-- SEKME 1: MAÇLAR VE KURULUM -->
+    <div id="tab-matches">
+      <div class="card" id="setup-card">
+        <div class="card-title">Seans ve Oyuncu Girişi</div>
+        <div style="margin-bottom: 12px;">
+          <label>Seans Tarihi</label>
+          <input type="date" id="session-date">
+        </div>
+        <div class="input-grid">
+          <div><label>1. Oyuncu</label><input type="text" id="p1" value="Oyuncu 1"></div>
+          <div><label>2. Oyuncu</label><input type="text" id="p2" value="Oyuncu 2"></div>
+          <div><label>3. Oyuncu</label><input type="text" id="p3" value="Oyuncu 3"></div>
+          <div><label>4. Oyuncu</label><input type="text" id="p4" value="Oyuncu 4"></div>
+        </div>
+        <button class="btn btn-primary" onclick="initTournament()">Fikstürü Oluştur (1. Tur)</button>
+      </div>
+
+      <div id="fixture-container" style="display: none;">
+        <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="addSecondRound()">+ 2. Turu Ekle</button>
+          <button class="btn btn-primary btn-sm" style="flex:1" onclick="saveCurrentSession()">💾 Seansı Kaydet</button>
+          <button class="btn btn-outline btn-sm" onclick="shareWhatsApp()">📲 Paylaş</button>
+        </div>
+        <div id="match-list"></div>
+      </div>
+    </div>
+
+    <!-- SEKME 2: GÜNCEL PUAN TABLOSU -->
+    <div id="tab-standings" style="display: none;">
+      <div class="card">
+        <div class="card-title">Mevcut Seans Puan Durumu</div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Oyuncu</th>
+              <th>O</th>
+              <th>G</th>
+              <th>B</th>
+              <th>M</th>
+              <th>Set</th>
+              <th>Puan</th>
+            </tr>
+          </thead>
+          <tbody id="standings-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SEKME 3: GEÇMİŞ SEANSLAR -->
+    <div id="tab-history" style="display: none;">
+      <div class="card">
+        <div class="card-title">
+          <span>Kayıtlı Seanslar</span>
+          <button class="btn btn-outline btn-sm" onclick="exportData()">Dışa Aktar</button>
+        </div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CANLI 15-30-40 SAYACI MODAL -->
+  <div class="modal" id="live-modal">
+    <div class="modal-content">
+      <h3 id="modal-match-title" style="font-size: 0.95rem; color: var(--text-muted);">Canlı Oyun Skoru</h3>
+      <div class="point-display">
+        <div>
+          <div id="live-p1-name" style="font-weight: 800; margin-bottom: 4px; color: #fff;">P1</div>
+          <div class="point-box" id="live-score-1">0</div>
+        </div>
+        <span style="font-size: 1.6rem; color: var(--border); font-weight: 900;">:</span>
+        <div>
+          <div id="live-p2-name" style="font-weight: 800; margin-bottom: 4px; color: #fff;">P2</div>
+          <div class="point-box" id="live-score-2">0</div>
+        </div>
+      </div>
+      <div class="live-btns">
+        <button class="live-btn" onclick="addPoint(1)">+1 Puan</button>
+        <button class="live-btn" onclick="addPoint(2)">+1 Puan</button>
+      </div>
+      <div style="margin-top: 16px; display: flex; gap: 8px;">
+        <button class="btn btn-secondary btn-sm" style="flex:1" onclick="resetLivePoints()">Sıfırla</button>
+        <button class="btn btn-primary btn-sm" style="flex:1" onclick="closeLiveCounter()">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('session-date').valueAsDate = new Date();
+    let currentPlayers = [];
+    let matches = [];
+    let activeMatchIndex = null;
+    const tennisPoints = ['0', '15', '30', '40', 'AD'];
+    let p1PointIdx = 0;
+    let p2PointIdx = 0;
+
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if(el) el.classList.add('active');
+      ['tab-matches', 'tab-standings', 'tab-history'].forEach(id => {
+        document.getElementById(id).style.display = (id === tabId) ? 'block' : 'none';
+      });
+      if(tabId === 'tab-standings') renderStandings();
+      if(tabId === 'tab-history') renderHistory();
+    }
+
+    function generateRound(players, roundNum) {
+      const [A, B, C, D] = players;
+      const base = [
+        { p1: A, p2: B, rest: [C, D] },
+        { p1: C, p2: D, rest: [A, B] },
+        { p1: A, p2: C, rest: [B, D] },
+        { p1: B, p2: D, rest: [A, C] },
+        { p1: A, p2: D, rest: [B, C] },
+        { p1: B, p2: C, rest: [A, D] }
+      ];
+      const list = roundNum === 1 ? base : [...base.slice(4), ...base.slice(0, 4)];
+      return list.map((m, idx) => ({
+        id: `r${roundNum}_m${idx + 1}`,
+        round: roundNum,
+        p1: m.p1,
+        p2: m.p2,
+        rest: m.rest,
+        score1: null,
+        score2: null
+      }));
+    }
+
+    function initTournament() {
+      const p1 = document.getElementById('p1').value.trim() || 'Oyuncu 1';
+      const p2 = document.getElementById('p2').value.trim() || 'Oyuncu 2';
+      const p3 = document.getElementById('p3').value.trim() || 'Oyuncu 3';
+      const p4 = document.getElementById('p4').value.trim() || 'Oyuncu 4';
+      currentPlayers = [p1, p2, p3, p4];
+      matches = generateRound(currentPlayers, 1);
+      
+      document.getElementById('setup-card').style.display = 'none';
+      document.getElementById('fixture-container').style.display = 'block';
+      renderMatches();
+    }
+
+    function addSecondRound() {
+      if(matches.some(m => m.round === 2)) return alert("2. Tur zaten eklendi!");
+      const r2 = generateRound(currentPlayers, 2);
+      matches = [...matches, ...r2];
+      renderMatches();
+    }
+
+    function renderMatches() {
+      const container = document.getElementById('match-list');
+      container.innerHTML = '';
+      matches.forEach((m, idx) => {
+        const div = document.createElement('div');
+        div.className = 'match-card';
+        div.innerHTML = `
+          <div class="match-header">
+            <span>Maç #${idx + 1} (${m.round}. Tur)</span>
+            <span class="resting-badge">💤 Dinlenen: ${m.rest.join(', ')}</span>
+          </div>
+          <div class="players-row">
+            <span>${m.p1}</span>
+            <span class="vs-tag">VS</span>
+            <span>${m.p2}</span>
+          </div>
+          <div class="score-buttons">
+            <button class="score-btn ${m.score1 === 2 ? 'active' : ''}" onclick="setScore(${idx}, 2, 0)">2 - 0</button>
+            <button class="score-btn ${m.score1 === 1 && m.score2 === 1 ? 'active' : ''}" onclick="setScore(${idx}, 1, 1)">1 - 1</button>
+            <button class="score-btn ${m.score2 === 2 ? 'active' : ''}" onclick="setScore(${idx}, 0, 2)">0 - 2</button>
+          </div>
+          <button class="btn btn-outline btn-sm" style="margin-top:10px; width:100%" onclick="openLiveCounter(${idx})">🎾 15-30-40 Canlı Sayaç</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function setScore(idx, s1, s2) {
+      matches[idx].score1 = s1;
+      matches[idx].score2 = s2;
+      renderMatches();
+    }
+
+    function openLiveCounter(idx) {
+      activeMatchIndex = idx;
+      p1PointIdx = 0;
+      p2PointIdx = 0;
+      document.getElementById('live-p1-name').innerText = matches[idx].p1;
+      document.getElementById('live-p2-name').innerText = matches[idx].p2;
+      updatePointUI();
+      document.getElementById('live-modal').classList.add('open');
+    }
+    function updatePointUI() {
+      document.getElementById('live-score-1').innerText = tennisPoints[p1PointIdx];
+      document.getElementById('live-score-2').innerText = tennisPoints[p2PointIdx];
+    }
+    function addPoint(playerNum) {
+      if(playerNum === 1) {
+        if(p1PointIdx === 3 && p2PointIdx < 3) { alert(matches[activeMatchIndex].p1 + " oyunu kazandı!"); p1PointIdx=0; p2PointIdx=0; }
+        else if(p1PointIdx === 3 && p2PointIdx === 3) p1PointIdx = 4;
+        else if(p1PointIdx === 4) { alert(matches[activeMatchIndex].p1 + " oyunu kazandı!"); p1PointIdx=0; p2PointIdx=0; }
+        else if(p2PointIdx === 4) { p2PointIdx = 3; }
+        else p1PointIdx++;
+      } else {
+        if(p2PointIdx === 3 && p1PointIdx < 3) { alert(matches[activeMatchIndex].p2 + " oyunu kazandı!"); p1PointIdx=0; p2PointIdx=0; }
+        else if(p2PointIdx === 3 && p1PointIdx === 3) p2PointIdx = 4;
+        else if(p2PointIdx === 4) { alert(matches[activeMatchIndex].p2 + " oyunu kazandı!"); p1PointIdx=0; p2PointIdx=0; }
+        else if(p1PointIdx === 4) { p1PointIdx = 3; }
+        else p2PointIdx++;
+      }
+      updatePointUI();
+    }
+    function resetLivePoints() { p1PointIdx = 0; p2PointIdx = 0; updatePointUI(); }
+    function closeLiveCounter() { document.getElementById('live-modal').classList.remove('open'); }
+
+    function computeStats() {
+      const stats = {};
+      currentPlayers.forEach(p => stats[p] = { name: p, played: 0, w: 0, d: 0, l: 0, pts: 0, won: 0, lost: 0 });
+      matches.forEach(m => {
+        if(m.score1 !== null && m.score2 !== null) {
+          stats[m.p1].played++;
+          stats[m.p2].played++;
+          stats[m.p1].won += m.score1;
+          stats[m.p1].lost += m.score2;
+          stats[m.p2].won += m.score2;
+          stats[m.p2].lost += m.score1;
+
+          if(m.score1 > m.score2) { stats[m.p1].w++; stats[m.p1].pts += 3; stats[m.p2].l++; }
+          else if(m.score1 < m.score2) { stats[m.p2].w++; stats[m.p2].pts += 3; stats[m.p1].l++; }
+          else { stats[m.p1].d++; stats[m.p2].d++; stats[m.p1].pts += 1; stats[m.p2].pts += 1; }
+        }
+      });
+      return Object.values(stats).sort((a,b) => b.pts - a.pts || (b.won - b.lost) - (a.won - a.lost));
+    }
+
+    function renderStandings() {
+      const tbody = document.getElementById('standings-body');
+      tbody.innerHTML = '';
+      computeStats().forEach((s, idx) => {
+        tbody.innerHTML += `
+          <tr>
+            <td class="rank-num">${idx + 1}</td>
+            <td style="font-weight:700; color:#fff">${s.name}</td>
+            <td>${s.played}</td>
+            <td>${s.w}</td>
+            <td>${s.d}</td>
+            <td>${s.l}</td>
+            <td>${s.won}-${s.lost}</td>
+            <td style="font-weight:900; color:var(--primary)">${s.pts}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function saveCurrentSession() {
+      const date = document.getElementById('session-date').value || new Date().toISOString().split('T')[0];
+      const session = { id: Date.now(), date, players: currentPlayers, matches, standings: computeStats() };
+      const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
+      history.unshift(session);
+      localStorage.setItem('tennis_sessions', JSON.stringify(history));
+      alert("✅ Seans kaydedildi!");
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('history-list');
+      const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
+      if(!history.length) return list.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem">Henüz kayıtlı seans yok.</p>';
+      list.innerHTML = history.map(s => `
+        <div style="border-bottom:1px solid var(--border); padding:10px 0;">
+          <div style="font-weight:700; font-size:0.9rem; color:#fff">📅 ${s.date} Seansı</div>
+          <div style="font-size:0.78rem; color:var(--text-muted)">Lider: 🥇 ${s.standings[0]?.name || '-'} (${s.standings[0]?.pts || 0} Puan)</div>
+        </div>
+      `).join('');
+    }
+
+    function shareWhatsApp() {
+      const date = document.getElementById('session-date').value;
+      const stats = computeStats();
+      let text = `🎾 *Tenis Seansı Sonu (${date})*\n\n*Puan Durumu:*\n`;
+      stats.forEach((s, i) => text += `${i+1}. ${s.name} - ${s.pts} Puan (${s.won}-${s.lost})\n`);
+      text += `\n*Maç Skorları:*\n`;
+      matches.forEach(m => {
+        if(m.score1 !== null) text += `• ${m.p1} ${m.score1} - ${m.score2} ${m.p2}\n`;
+      });
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`);
+    }
+
+    function exportData() {
+      const data = localStorage.getItem('tennis_sessions') || '[]';
+      const blob = new Blob([data], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `tenis_yedek_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+    }
+  </script>
+</body>
+</html>
