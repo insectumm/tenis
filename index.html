@@ -214,7 +214,13 @@
   </div>
 
   <script>
-    document.getElementById('session-date').valueAsDate = new Date();
+    // Yerel saate göre bugünün tarihi (YYYY-MM-DD) – UTC kayması olmasın
+    function todayLocal() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+    document.getElementById('session-date').value = todayLocal();
     let currentPlayers = [];
     let matches = [];
     let currentSessionId = null;
@@ -316,6 +322,7 @@
       if (!skipConfirm && !confirm("Mevcut ekranı sıfırlayıp yeni oyuncu/seans girişine dönmek istiyor musunuz?")) return;
       matches = [];
       currentSessionId = null;
+      document.getElementById('session-date').value = todayLocal();
       document.getElementById('setup-card').style.display = 'block';
       document.getElementById('fixture-container').style.display = 'none';
     }
@@ -487,7 +494,7 @@
     }
 
     function saveCurrentSession() {
-      const date = document.getElementById('session-date').value || new Date().toISOString().split('T')[0];
+      const date = document.getElementById('session-date').value || todayLocal();
       const sessionId = currentSessionId || Date.now();
       currentSessionId = sessionId;
       const session = { id: sessionId, date, players: currentPlayers, matches, standings: computeStats() };
@@ -574,7 +581,7 @@
       const blob = new Blob([data], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `tenis_skor_yedek_${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `tenis_skor_yedek_${todayLocal()}.json`;
       a.click();
     }
   </script>
