@@ -419,9 +419,13 @@
           stats[m.p2].won += m.score2;
           stats[m.p2].lost += m.score1;
 
-          if(m.score1 > m.score2) { stats[m.p1].w++; stats[m.p1].pts += 3; stats[m.p2].l++; }
-          else if(m.score1 < m.score2) { stats[m.p2].w++; stats[m.p2].pts += 3; stats[m.p1].l++; }
-          else { stats[m.p1].d++; stats[m.p2].d++; stats[m.p1].pts += 1; stats[m.p2].pts += 1; }
+          // Puan: kazanılan her oyun = 1 puan
+          stats[m.p1].pts += m.score1;
+          stats[m.p2].pts += m.score2;
+
+          if(m.score1 > m.score2) { stats[m.p1].w++; stats[m.p2].l++; }
+          else if(m.score1 < m.score2) { stats[m.p2].w++; stats[m.p1].l++; }
+          else { stats[m.p1].d++; stats[m.p2].d++; }
         }
       });
       return Object.values(stats).sort((a,b) => b.pts - a.pts || (b.won - b.lost) - (a.won - a.lost));
