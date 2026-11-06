@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Tenis 4'lü Turnuva Takip</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tenis Skor">
+  <title>Tenis Skor</title>
   <style>
     :root {
       --bg: #090d16;
@@ -16,16 +19,17 @@
       --primary-glow: rgba(34, 197, 94, 0.25);
       --accent: #eab308;
       --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
       --radius: 14px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding-bottom: 80px; min-height: 100vh; }
     
     header { background: #0f172a; border-bottom: 1px solid var(--border); padding: 16px; text-align: center; position: sticky; top: 0; z-index: 50; }
-    header h1 { font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    header h1 { font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
     
-    .nav-tabs { display: flex; background: #0d1527; border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 40; }
+    .nav-tabs { display: flex; background: #0d1527; border-bottom: 1px solid var(--border); position: sticky; top: 59px; z-index: 40; }
     .tab-btn { flex: 1; padding: 13px 6px; font-size: 0.82rem; font-weight: 700; text-align: center; border: none; background: none; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(34, 197, 94, 0.05); }
 
@@ -43,11 +47,17 @@
     .btn-primary:active { opacity: 0.9; transform: scale(0.98); }
     .btn-secondary { background: var(--card-inner); color: #cbd5e1; border: 1px solid var(--border); }
     .btn-outline { background: transparent; border: 1px solid var(--border); color: #cbd5e1; }
+    .btn-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .btn-danger:active { background: var(--danger); color: #fff; }
     .btn-sm { padding: 8px 12px; font-size: 0.78rem; width: auto; border-radius: 8px; }
+
+    /* Round Header Banner */
+    .round-banner { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 10px; margin: 18px 0 10px 0; }
+    .round-banner-title { font-size: 0.9rem; font-weight: 800; color: #fff; }
 
     /* Match Cards */
     .match-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; background: var(--card); }
-    .match-header { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
+    .match-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
     .resting-badge { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); padding: 2px 8px; border-radius: 12px; font-size: 0.72rem; }
     .players-row { display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 1.1rem; margin: 12px 0; color: #fff; }
     .vs-tag { color: var(--primary); font-size: 0.75rem; background: rgba(34, 197, 94, 0.12); padding: 3px 8px; border-radius: 6px; }
@@ -61,6 +71,10 @@
     th { text-align: left; padding: 10px 6px; background: var(--card-inner); color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
     td { padding: 12px 6px; border-bottom: 1px solid var(--border); color: #e2e8f0; }
     .rank-num { font-weight: 900; color: var(--primary); width: 22px; }
+
+    /* History Item */
+    .history-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 12px 0; gap: 10px; }
+    .history-item:last-child { border-bottom: none; }
 
     /* Live Counter Modal */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
@@ -76,7 +90,7 @@
 <body>
 
   <header>
-    <h1>🎾 Tenis 4'lü Turnuva Takip</h1>
+    <h1>🎾 Tenis Skor</h1>
     <p>Dengeli Dinlenme & 2 Oyunluk Eşleşme</p>
   </header>
 
@@ -107,11 +121,13 @@
 
       <div id="fixture-container" style="display: none;">
         <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-          <button class="btn btn-secondary btn-sm" onclick="addSecondRound()">+ 2. Turu Ekle</button>
+          <button class="btn btn-secondary btn-sm" onclick="addNextRound()">+ Yeni Tur Ekle</button>
           <button class="btn btn-primary btn-sm" style="flex:1" onclick="saveCurrentSession()">💾 Seansı Kaydet</button>
           <button class="btn btn-outline btn-sm" onclick="shareWhatsApp()">📲 Paylaş</button>
+          <button class="btn btn-danger btn-sm" onclick="resetCurrentSession()" title="Yeni Seans Başlat">🔄 Sıfırla</button>
         </div>
         <div id="match-list"></div>
+        <button class="btn btn-secondary" style="margin-top: 8px;" onclick="addNextRound()">+ Yeni Tur Ekle</button>
       </div>
     </div>
 
@@ -128,11 +144,30 @@
               <th>G</th>
               <th>B</th>
               <th>M</th>
-              <th>Set</th>
+              <th>Oyun</th>
               <th>Puan</th>
             </tr>
           </thead>
           <tbody id="standings-body"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Tüm Zamanlar Genel Klasmanı</div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Oyuncu</th>
+              <th>O</th>
+              <th>G</th>
+              <th>B</th>
+              <th>M</th>
+              <th>Oyun</th>
+              <th>Puan</th>
+            </tr>
+          </thead>
+          <tbody id="alltime-standings-body"></tbody>
         </table>
       </div>
     </div>
@@ -142,7 +177,10 @@
       <div class="card">
         <div class="card-title">
           <span>Kayıtlı Seanslar</span>
-          <button class="btn btn-outline btn-sm" onclick="exportData()">Dışa Aktar</button>
+          <div style="display:flex; gap: 6px;">
+            <button class="btn btn-outline btn-sm" onclick="exportData()">Dışa Aktar</button>
+            <button class="btn btn-danger btn-sm" onclick="clearAllHistory()">Tümünü Sil</button>
+          </div>
         </div>
         <div id="history-list"></div>
       </div>
@@ -180,6 +218,7 @@
     document.getElementById('session-date').valueAsDate = new Date();
     let currentPlayers = [];
     let matches = [];
+    let currentSessionId = null;
     let activeMatchIndex = null;
     const tennisPoints = ['0', '15', '30', '40', 'AD'];
     let p1PointIdx = 0;
@@ -191,10 +230,14 @@
       ['tab-matches', 'tab-standings', 'tab-history'].forEach(id => {
         document.getElementById(id).style.display = (id === tabId) ? 'block' : 'none';
       });
-      if(tabId === 'tab-standings') renderStandings();
+      if(tabId === 'tab-standings') {
+        renderStandings();
+        renderAllTimeStandings();
+      }
       if(tabId === 'tab-history') renderHistory();
     }
 
+    // Dengeli Eşleşme Algoritması: Turlar arası kesintisiz dinlenme rotasyonu
     function generateRound(players, roundNum) {
       const [A, B, C, D] = players;
       const base = [
@@ -205,9 +248,11 @@
         { p1: A, p2: D, rest: [B, C] },
         { p1: B, p2: C, rest: [A, D] }
       ];
-      const list = roundNum === 1 ? base : [...base.slice(4), ...base.slice(0, 4)];
+      // Her yeni turda önceki turun son maçında oynayanların dinlenmesi için blok kaydırılır
+      const shift = ((roundNum - 1) * 4) % 6;
+      const list = [...base.slice(shift), ...base.slice(0, shift)];
       return list.map((m, idx) => ({
-        id: `r${roundNum}_m${idx + 1}`,
+        id: `r${roundNum}_m${idx + 1}_${Date.now()}`,
         round: roundNum,
         p1: m.p1,
         p2: m.p2,
@@ -223,6 +268,7 @@
       const p3 = document.getElementById('p3').value.trim() || 'Oyuncu 3';
       const p4 = document.getElementById('p4').value.trim() || 'Oyuncu 4';
       currentPlayers = [p1, p2, p3, p4];
+      currentSessionId = Date.now();
       matches = generateRound(currentPlayers, 1);
       
       document.getElementById('setup-card').style.display = 'none';
@@ -230,19 +276,62 @@
       renderMatches();
     }
 
-    function addSecondRound() {
-      if(matches.some(m => m.round === 2)) return alert("2. Tur zaten eklendi!");
-      const r2 = generateRound(currentPlayers, 2);
-      matches = [...matches, ...r2];
+    function addNextRound() {
+      const existingRounds = matches.map(m => m.round);
+      const maxRound = existingRounds.length > 0 ? Math.max(...existingRounds) : 0;
+      const nextRoundNum = maxRound + 1;
+      const newRoundMatches = generateRound(currentPlayers, nextRoundNum);
+      matches = [...matches, ...newRoundMatches];
       renderMatches();
+    }
+
+    function deleteRound(roundNum) {
+      const uniqueRounds = [...new Set(matches.map(m => m.round))];
+      if (uniqueRounds.length <= 1) {
+        if (confirm("Son kalan turu silerseniz mevcut seans sıfırlanır. Onaylıyor musunuz?")) {
+          resetCurrentSession(true);
+        }
+        return;
+      }
+      if (!confirm(`${roundNum}. Turu ve içindeki tüm maç kayıtlarını silmek istediğinize emin misiniz?`)) return;
+      
+      matches = matches.filter(m => m.round !== roundNum);
+      // Kalan turları sırayla yeniden numaralandır (1. Tur, 2. Tur...)
+      const remainingRounds = [...new Set(matches.map(m => m.round))].sort((a, b) => a - b);
+      matches.forEach(m => {
+        m.round = remainingRounds.indexOf(m.round) + 1;
+      });
+      renderMatches();
+    }
+
+    function resetCurrentSession(skipConfirm = false) {
+      if (!skipConfirm && !confirm("Mevcut ekranı sıfırlayıp yeni oyuncu/seans girişine dönmek istiyor musunuz?")) return;
+      matches = [];
+      currentSessionId = null;
+      document.getElementById('setup-card').style.display = 'block';
+      document.getElementById('fixture-container').style.display = 'none';
     }
 
     function renderMatches() {
       const container = document.getElementById('match-list');
       container.innerHTML = '';
+      let lastRound = null;
+
       matches.forEach((m, idx) => {
+        if (m.round !== lastRound) {
+          lastRound = m.round;
+          const banner = document.createElement('div');
+          banner.className = 'round-banner';
+          banner.innerHTML = `
+            <span class="round-banner-title">🏁 ${m.round}. Tur Eşleşmeleri</span>
+            <button class="btn btn-danger btn-sm" onclick="deleteRound(${m.round})">🗑️ ${m.round}. Turu Sil</button>
+          `;
+          container.appendChild(banner);
+        }
+
         const div = document.createElement('div');
         div.className = 'match-card';
+        const isDraw = m.score1 === 1 && m.score2 === 1;
         div.innerHTML = `
           <div class="match-header">
             <span>Maç #${idx + 1} (${m.round}. Tur)</span>
@@ -255,7 +344,7 @@
           </div>
           <div class="score-buttons">
             <button class="score-btn ${m.score1 === 2 ? 'active' : ''}" onclick="setScore(${idx}, 2, 0)">2 - 0</button>
-            <button class="score-btn ${m.score1 === 1 && m.score2 === 1 ? 'active' : ''}" onclick="setScore(${idx}, 1, 1)">1 - 1</button>
+            <button class="score-btn ${isDraw ? 'active' : ''}" onclick="setScore(${idx}, 1, 1)">1 - 1</button>
             <button class="score-btn ${m.score2 === 2 ? 'active' : ''}" onclick="setScore(${idx}, 0, 2)">0 - 2</button>
           </div>
           <button class="btn btn-outline btn-sm" style="margin-top:10px; width:100%" onclick="openLiveCounter(${idx})">🎾 15-30-40 Canlı Sayaç</button>
@@ -265,8 +354,13 @@
     }
 
     function setScore(idx, s1, s2) {
-      matches[idx].score1 = s1;
-      matches[idx].score2 = s2;
+      if (matches[idx].score1 === s1 && matches[idx].score2 === s2) {
+        matches[idx].score1 = null;
+        matches[idx].score2 = null;
+      } else {
+        matches[idx].score1 = s1;
+        matches[idx].score2 = s2;
+      }
       renderMatches();
     }
 
@@ -302,11 +396,14 @@
     function resetLivePoints() { p1PointIdx = 0; p2PointIdx = 0; updatePointUI(); }
     function closeLiveCounter() { document.getElementById('live-modal').classList.remove('open'); }
 
-    function computeStats() {
+    function computeStats(matchList = matches, playerList = currentPlayers) {
       const stats = {};
-      currentPlayers.forEach(p => stats[p] = { name: p, played: 0, w: 0, d: 0, l: 0, pts: 0, won: 0, lost: 0 });
-      matches.forEach(m => {
+      playerList.forEach(p => stats[p] = { name: p, played: 0, w: 0, d: 0, l: 0, pts: 0, won: 0, lost: 0 });
+      matchList.forEach(m => {
         if(m.score1 !== null && m.score2 !== null) {
+          if(!stats[m.p1]) stats[m.p1] = { name: m.p1, played: 0, w: 0, d: 0, l: 0, pts: 0, won: 0, lost: 0 };
+          if(!stats[m.p2]) stats[m.p2] = { name: m.p2, played: 0, w: 0, d: 0, l: 0, pts: 0, won: 0, lost: 0 };
+          
           stats[m.p1].played++;
           stats[m.p2].played++;
           stats[m.p1].won += m.score1;
@@ -325,7 +422,43 @@
     function renderStandings() {
       const tbody = document.getElementById('standings-body');
       tbody.innerHTML = '';
-      computeStats().forEach((s, idx) => {
+      const list = computeStats();
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted)">Aktif seans bulunmuyor.</td></tr>';
+        return;
+      }
+      list.forEach((s, idx) => {
+        tbody.innerHTML += `
+          <tr>
+            <td class="rank-num">${idx + 1}</td>
+            <td style="font-weight:700; color:#fff">${s.name}</td>
+            <td>${s.played}</td>
+            <td>${s.w}</td>
+            <td>${s.d}</td>
+            <td>${s.l}</td>
+            <td>${s.won}-${s.lost}</td>
+            <td style="font-weight:900; color:var(--primary)">${s.pts}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderAllTimeStandings() {
+      const tbody = document.getElementById('alltime-standings-body');
+      tbody.innerHTML = '';
+      const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
+      let allMatches = [];
+      let allPlayers = new Set();
+      history.forEach(s => {
+        (s.players || []).forEach(p => allPlayers.add(p));
+        (s.matches || []).forEach(m => allMatches.push(m));
+      });
+      const list = computeStats(allMatches, Array.from(allPlayers));
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted)">Henüz kaydedilmiş seans verisi yok.</td></tr>';
+        return;
+      }
+      list.forEach((s, idx) => {
         tbody.innerHTML += `
           <tr>
             <td class="rank-num">${idx + 1}</td>
@@ -343,33 +476,83 @@
 
     function saveCurrentSession() {
       const date = document.getElementById('session-date').value || new Date().toISOString().split('T')[0];
-      const session = { id: Date.now(), date, players: currentPlayers, matches, standings: computeStats() };
-      const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
-      history.unshift(session);
+      const sessionId = currentSessionId || Date.now();
+      currentSessionId = sessionId;
+      const session = { id: sessionId, date, players: currentPlayers, matches, standings: computeStats() };
+      let history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
+      
+      const existingIdx = history.findIndex(s => s.id === sessionId);
+      if (existingIdx > -1) {
+        history[existingIdx] = session;
+      } else {
+        history.unshift(session);
+      }
       localStorage.setItem('tennis_sessions', JSON.stringify(history));
-      alert("✅ Seans kaydedildi!");
+      alert("✅ Seans başarıyla kaydedildi!");
+    }
+
+    function deleteSession(sessionId) {
+      if (!confirm("Bu seans kaydını kalıcı olarak silmek istediğinize emin misiniz?")) return;
+      let history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
+      history = history.filter(s => s.id !== sessionId);
+      localStorage.setItem('tennis_sessions', JSON.stringify(history));
+      renderHistory();
+    }
+
+    function loadSession(sessionId) {
+      const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
+      const found = history.find(s => s.id === sessionId);
+      if (!found) return;
+      currentSessionId = found.id;
+      currentPlayers = found.players;
+      matches = found.matches;
+      document.getElementById('session-date').value = found.date;
+      document.getElementById('setup-card').style.display = 'none';
+      document.getElementById('fixture-container').style.display = 'block';
+      renderMatches();
+      switchTab('tab-matches', document.querySelectorAll('.tab-btn')[0]);
+    }
+
+    function clearAllHistory() {
+      if (!confirm("Tüm kayıtlı seans geçmişini silmek istediğinize emin misiniz?")) return;
+      localStorage.removeItem('tennis_sessions');
+      renderHistory();
     }
 
     function renderHistory() {
       const list = document.getElementById('history-list');
       const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
-      if(!history.length) return list.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem">Henüz kayıtlı seans yok.</p>';
-      list.innerHTML = history.map(s => `
-        <div style="border-bottom:1px solid var(--border); padding:10px 0;">
-          <div style="font-weight:700; font-size:0.9rem; color:#fff">📅 ${s.date} Seansı</div>
-          <div style="font-size:0.78rem; color:var(--text-muted)">Lider: 🥇 ${s.standings[0]?.name || '-'} (${s.standings[0]?.pts || 0} Puan)</div>
-        </div>
-      `).join('');
+      if(!history.length) {
+        list.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem">Henüz kayıtlı seans yok.</p>';
+        return;
+      }
+      list.innerHTML = history.map(s => {
+        const roundCount = new Set((s.matches || []).map(m => m.round)).size || 1;
+        return `
+          <div class="history-item">
+            <div>
+              <div style="font-weight:700; font-size:0.92rem; color:#fff">📅 ${s.date} (${roundCount} Tur)</div>
+              <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
+                Lider: 🥇 ${s.standings[0]?.name || '-'} (${s.standings[0]?.pts || 0} Puan)
+              </div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-secondary btn-sm" onclick="loadSession(${s.id})">Aç / Düzenle</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteSession(${s.id})">🗑️ Sil</button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function shareWhatsApp() {
       const date = document.getElementById('session-date').value;
       const stats = computeStats();
-      let text = `🎾 *Tenis Seansı Sonu (${date})*\n\n*Puan Durumu:*\n`;
+      let text = `🎾 *Tenis Skor (${date})*\n\n*Puan Durumu:*\n`;
       stats.forEach((s, i) => text += `${i+1}. ${s.name} - ${s.pts} Puan (${s.won}-${s.lost})\n`);
       text += `\n*Maç Skorları:*\n`;
       matches.forEach(m => {
-        if(m.score1 !== null) text += `• ${m.p1} ${m.score1} - ${m.score2} ${m.p2}\n`;
+        if(m.score1 !== null) text += `• [${m.round}. Tur] ${m.p1} ${m.score1} - ${m.score2} ${m.p2}\n`;
       });
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`);
     }
@@ -379,7 +562,7 @@
       const blob = new Blob([data], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `tenis_yedek_${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `tenis_skor_yedek_${new Date().toISOString().split('T')[0]}.json`;
       a.click();
     }
   </script>
