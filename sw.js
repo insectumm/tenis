@@ -1,5 +1,5 @@
 // Tenis Skor - çevrimdışı çalışma için basit service worker
-const CACHE = 'tenis-skor-v3';
+const CACHE = 'tenis-skor-v4';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-180.png'];
 
 self.addEventListener('install', event => {
@@ -39,7 +39,7 @@ self.addEventListener('fetch', event => {
   // Sayfa açılışı: önce ağ (güncelleme gelsin), internet yoksa önbellek
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'no-cache' })
         .then(res => {
           const copy = res.clone();
           caches.open(CACHE).then(c => c.put('./index.html', copy));
