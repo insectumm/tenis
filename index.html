@@ -6,7 +6,11 @@
   <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400..900;1,700..900&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400..900;1,700..900&display=swap"></noscript>
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-180.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -27,11 +31,11 @@
       --danger-bg: rgba(239, 68, 68, 0.12);
       --radius: 14px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding-bottom: 80px; min-height: 100vh; }
     
     header { background: #0f172a; border-bottom: 1px solid var(--border); padding: 16px; padding-top: calc(16px + env(safe-area-inset-top, 0px)); text-align: center; position: sticky; top: 0; z-index: 50; }
-    header h1 { font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    header h1 { font-size: 1.35rem; font-weight: 900; font-style: italic; text-transform: lowercase; color: #fff; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     
     .nav-tabs { display: flex; background: #0d1527; border-bottom: 1px solid var(--border); position: sticky; top: calc(55px + env(safe-area-inset-top, 0px)); z-index: 40; }
     .tab-btn { flex: 1; padding: 13px 6px; font-size: 0.82rem; font-weight: 700; text-align: center; border: none; background: none; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
@@ -114,7 +118,7 @@
     .podium-col { flex: 1; max-width: 140px; text-align: center; }
     .podium-name { font-weight: 800; color: #fff; font-size: 0.9rem; word-break: break-word; line-height: 1.25; }
     .podium-pts { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
-    .podium-block { border-radius: 10px 10px 0 0; margin-top: 8px; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; font-size: 1.6rem; }
+    .podium-block { border-radius: 10px 10px 0 0; margin-top: 8px; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; font-size: 1.5rem; font-weight: 800; color: rgba(15,23,42,0.75); }
     .podium-block.r1 { height: 96px; background: linear-gradient(180deg, #facc15, #a16207); }
     .podium-block.r2 { height: 70px; background: linear-gradient(180deg, #cbd5e1, #64748b); }
     .podium-block.r3 { height: 52px; background: linear-gradient(180deg, #fb923c, #9a3412); }
@@ -122,23 +126,32 @@
     .chips-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-right: 2px; }
     .chip { padding: 6px 12px; border-radius: 99px; border: 1px solid var(--border); background: var(--card-inner); color: var(--text-muted); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
     .chip.active { background: rgba(34,197,94,0.15); color: var(--primary); border-color: var(--primary); }
-    .matrix { font-size: 0.74rem; }
-    .matrix th, .matrix td { text-align: center; padding: 8px 4px; min-width: 44px; white-space: nowrap; }
-    .matrix .rowh { position: sticky; left: 0; z-index: 1; text-align: left; font-weight: 700; color: #fff; background: var(--card); max-width: 84px; overflow: hidden; text-overflow: ellipsis; }
-    .matrix thead .rowh { background: var(--card-inner); }
-    .m-win { color: #4ade80; font-weight: 800; }
-    .m-loss { color: #f87171; font-weight: 800; }
-    .m-eq { color: #e2e8f0; font-weight: 700; }
-    .m-none { color: var(--text-muted); }
-    .m-self { background: rgba(255,255,255,0.03); color: var(--text-muted); }
     #toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); background: #052e16; color: #bbf7d0; border: 1px solid var(--primary); padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: 0.25s; z-index: 200; }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .saved-card { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.4); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px; color: #bbf7d0; font-size: 0.9rem; }
+    .saved-card .btn { width: auto; padding: 9px 14px; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .rec-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .rec-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .rec-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 700; }
+    .rec-val { font-size: 0.95rem; font-weight: 800; color: #fff; margin-top: 3px; line-height: 1.35; }
+    .rec-num { font-size: 1.5rem; font-weight: 900; color: var(--primary); white-space: nowrap; }
+    .h2h-selects { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .h2h-selects select { width: 100%; padding: 11px 8px; background: var(--card-inner); color: #fff; border: 1px solid var(--border); border-radius: 9px; font-size: 0.9rem; font-weight: 700; outline: none; }
+    .h2h-score { display: flex; align-items: center; justify-content: space-around; text-align: center; margin: 4px 0 10px; }
+    .h2h-score .nm { font-size: 0.85rem; font-weight: 800; color: #fff; word-break: break-word; }
+    .h2h-score .big { font-size: 2.4rem; font-weight: 900; line-height: 1.1; }
+    .h2h-bar { display: flex; height: 8px; border-radius: 99px; overflow: hidden; background: var(--card-inner); margin-bottom: 10px; }
+    .h2h-bar > div { height: 100%; }
+    .ball-icon { display: inline-block; width: 1.6em; height: 1.6em; vertical-align: -0.4em; flex-shrink: 0; }
+    header h1 .ball-icon { width: 2em; height: 2em; vertical-align: middle; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🎾 Tenis Skor</h1>
+    <h1><svg class="ball-icon" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="46" r="40" fill="#bef264"/><path d="M17 18c11 9 11 51 0 60M79 18c-11 9-11 51 0 60" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="17" y="35" width="62" height="30" rx="10" fill="#0f172a"/><text x="48" y="58" text-anchor="middle" font-size="22" font-weight="900" font-style="italic" fill="#fff" letter-spacing="-0.5" font-family="'Source Sans 3', system-ui, sans-serif">0<tspan fill="#bef264">-</tspan>40</text></svg> Tenis Skor</h1>
     <button class="install-btn" id="install-btn">⬇ Yükle</button>
   </header>
 
@@ -173,11 +186,12 @@
 
       <div id="fixture-container" style="display: none;">
         <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-          <button class="btn btn-secondary btn-sm" onclick="addNextRound()">+ Yeni Tur Ekle</button>
-          <button class="btn btn-primary btn-sm" style="flex:1" onclick="saveCurrentSession()">💾 Seansı Kaydet</button>
-          <button class="btn btn-outline btn-sm" onclick="shareWhatsApp()">📲 Paylaş</button>
-          <button class="btn btn-danger btn-sm" onclick="resetCurrentSession()" title="Yeni Seans Başlat">🔄 Sıfırla</button>
+          <button class="btn btn-primary btn-sm" style="flex:1 1 100%; padding:11px" onclick="saveCurrentSession()">Seansı Kaydet</button>
+          <button class="btn btn-secondary btn-sm" style="flex:1" onclick="addNextRound()">+ Tur Ekle</button>
+          <button class="btn btn-secondary btn-sm" style="flex:1" id="undo-btn" onclick="undoLast()" disabled>↩ Geri al</button>
+          <button class="btn btn-outline btn-sm" style="flex:1" onclick="startNewSession()" title="Yeni seans başlat">Yeni Seans</button>
         </div>
+        <div id="saved-banner"></div>
         <div class="progress-card" id="progress-card"></div>
         <div id="match-list"></div>
         <div id="summary-card"></div>
@@ -239,9 +253,14 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><span>Karşılaşma Matrisi</span></div>
-        <div class="detail-sub" style="margin-bottom:8px">Satırdaki oyuncunun, sütundaki rakibe karşı kazandığı-kaybettiği oyun sayısı.</div>
-        <div class="table-scroll" id="matrix-wrap"></div>
+        <div class="card-title"><span>Rekorlar</span></div>
+        <div id="records-wrap"></div>
+      </div>
+
+
+      <div class="card">
+        <div class="card-title"><span>İkili Rekabet</span></div>
+        <div id="h2h-wrap"></div>
       </div>
     </div>
 
@@ -250,10 +269,11 @@
       <div class="card">
         <div class="card-title">
           <span>Kayıtlı Seanslar</span>
-          <div style="display:flex; gap: 6px;">
+          <div style="display:flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;">
             <button class="btn btn-outline btn-sm" onclick="exportData()">Dışa Aktar</button>
             <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-file').click()">İçe Aktar</button>
             <input type="file" id="import-file" accept=".json,application/json" style="display:none" onchange="importData(this)">
+            <button class="btn btn-outline btn-sm" onclick="removeDuplicates()">Yinelenenleri Temizle</button>
             <button class="btn btn-danger btn-sm" onclick="clearAllHistory()">Tümünü Sil</button>
           </div>
         </div>
@@ -340,7 +360,7 @@
         syncChips();
         renderStandings();
         renderAllTimeStandings();
-        renderMatrix();
+        renderExtras();
       }
       if(tabId === 'tab-history') renderHistory();
     }
@@ -392,6 +412,7 @@
       for (let i = 1; i <= playerCount; i++) {
         currentPlayers.push(document.getElementById('p' + i).value.trim() || `Oyuncu ${i}`);
       }
+      undoStack = []; justSaved = false;
       currentSessionId = Date.now();
       try { localStorage.setItem('tennis_last_players', JSON.stringify(currentPlayers)); } catch (e) {}
       matches = generateRound(currentPlayers, 1);
@@ -403,7 +424,32 @@
       keepAwake(true);
     }
 
+    // ---------- Geri al ----------
+    let undoStack = [];
+    let justSaved = false;
+
+    function pushUndo(label) {
+      undoStack.push({ label, matches: JSON.stringify(matches) });
+      if (undoStack.length > 40) undoStack.shift();
+      updateUndoBtn();
+    }
+    function updateUndoBtn() {
+      const b = document.getElementById('undo-btn');
+      if (b) b.disabled = undoStack.length === 0;
+    }
+    function undoLast() {
+      const u = undoStack.pop();
+      if (!u) return;
+      matches = JSON.parse(u.matches);
+      justSaved = false;
+      renderMatches();
+      updateUndoBtn();
+      toast('↩ Geri alındı: ' + u.label);
+    }
+
     function addNextRound() {
+      pushUndo('tur eklendi');
+      justSaved = false;
       const existingRounds = matches.map(m => m.round);
       const maxRound = existingRounds.length > 0 ? Math.max(...existingRounds) : 0;
       const nextRoundNum = maxRound + 1;
@@ -421,7 +467,8 @@
         return;
       }
       if (!confirm(`${roundNum}. Turu ve içindeki tüm maç kayıtlarını silmek istediğinize emin misiniz?`)) return;
-      
+      pushUndo(`${roundNum}. tur silindi`);
+      justSaved = false;
       matches = matches.filter(m => m.round !== roundNum);
       const remainingRounds = [...new Set(matches.map(m => m.round))].sort((a, b) => a - b);
       matches.forEach(m => {
@@ -434,12 +481,38 @@
       if (!skipConfirm && !confirm("Mevcut ekranı sıfırlayıp yeni oyuncu/seans girişine dönmek istiyor musunuz?")) return;
       matches = [];
       currentSessionId = null;
+      undoStack = []; justSaved = false; updateUndoBtn();
+      ['saved-banner', 'match-list', 'summary-card', 'progress-card'].forEach(id => { document.getElementById(id).innerHTML = ''; });
       clearDraft();
       keepAwake(false);
       document.getElementById('session-date').value = todayLocal();
       document.getElementById('setup-card').style.display = 'block';
       document.getElementById('fixture-container').style.display = 'none';
       renderDraftBanner();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Yeni seans: kayıtlıysa doğrudan başlar, kaydedilmemişse önce kaydetmeyi önerir
+    function startNewSession() {
+      const cur = { id: currentSessionId, date: document.getElementById('session-date').value, players: currentPlayers, matches };
+      if (matches.length && countPlayed(matches) > 0 && draftIsUnsaved(cur)) {
+        if (!confirm("Bu seansta kaydedilmemiş skorlar var.\n\nTamam: önce kaydet, sonra yeni seans başlat\nİptal: seansta kal")) return;
+        if (saveCurrentSession() === false) return;
+      }
+      resetCurrentSession(true);
+    }
+
+    function renderSavedBanner() {
+      const box = document.getElementById('saved-banner');
+      if (!justSaved) { box.innerHTML = ''; return; }
+      box.innerHTML = `
+        <div class="saved-card">
+          <div>
+            <div style="font-weight:800">Seans kaydedildi</div>
+            <div style="font-size:0.78rem; opacity:0.85; margin-top:2px">Yeni bir seans için butona basın. İsimler hazır gelir.</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="startNewSession()">Yeni Seans</button>
+        </div>`;
     }
 
     function countPlayed(list) { return (list || []).filter(m => m.score1 !== null && m.score2 !== null).length; }
@@ -458,8 +531,8 @@
           const banner = document.createElement('div');
           banner.className = 'round-banner';
           banner.innerHTML = `
-            <span class="round-banner-title">🏁 ${m.round}. Tur Eşleşmeleri</span>
-            <button class="btn btn-danger btn-sm" onclick="deleteRound(${m.round})">🗑️ ${m.round}. Turu Sil</button>
+            <span class="round-banner-title">${m.round}. Tur Eşleşmeleri</span>
+            <button class="btn btn-danger btn-sm" onclick="deleteRound(${m.round})">${m.round}. Turu Sil</button>
           `;
           container.appendChild(banner);
         }
@@ -473,7 +546,7 @@
         div.innerHTML = `
           <div class="match-header">
             <span>Maç #${idx + 1} (${m.round}. Tur)${isNext ? '<span class="next-badge">▶ Sıradaki</span>' : ''}${isDone ? '<span class="done-badge">✓</span>' : ''}</span>
-            ${m.rest.length ? `<span class="resting-badge">💤 Dinlenen: ${m.rest.map(esc).join(', ')}</span>` : ''}
+            ${m.rest.length ? `<span class="resting-badge">Dinlenen: ${m.rest.map(esc).join(', ')}</span>` : ''}
           </div>
           <div class="players-row">
             <span>${esc(m.p1)}</span>
@@ -491,6 +564,8 @@
 
       renderProgress();
       renderSummary();
+      renderSavedBanner();
+      updateUndoBtn();
       persistDraft();
     }
 
@@ -498,7 +573,7 @@
       const total = matches.length, done = playedCount();
       const pct = total ? Math.round(done / total * 100) : 0;
       document.getElementById('progress-card').innerHTML = `
-        <div class="progress-top"><span>🎾 ${done}/${total} maç oynandı</span><span>%${pct}</span></div>
+        <div class="progress-top"><span>${BALL} ${done}/${total} maç oynandı</span><span>%${pct}</span></div>
         <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
       `;
     }
@@ -506,7 +581,15 @@
     function setScore(idx, s1, s2) {
       const wasNext = idx === firstUnplayed();
       const wasComplete = matches.length > 0 && playedCount() === matches.length;
-      if (matches[idx].score1 === s1 && matches[idx].score2 === s2) {
+      const m0 = matches[idx];
+      const hasScore = m0.score1 !== null && m0.score2 !== null;
+      const clearing = hasScore && m0.score1 === s1 && m0.score2 === s2;
+      // Yanlışlıkla dokunmaya karşı: kayıtlı skoru değiştirmeden/silmeden önce sor
+      if (clearing && !confirm(`Maç #${idx + 1}: ${m0.p1} ${m0.score1} - ${m0.score2} ${m0.p2}\nBu skor silinsin mi?`)) return;
+      if (hasScore && !clearing && !confirm(`Maç #${idx + 1}: ${m0.p1} ${m0.score1} - ${m0.score2} ${m0.p2}\nSkor ${s1} - ${s2} olarak değiştirilsin mi?`)) return;
+      pushUndo(`Maç #${idx + 1}`);
+      justSaved = false;
+      if (clearing) {
         matches[idx].score1 = null;
         matches[idx].score2 = null;
       } else {
@@ -528,9 +611,7 @@
     }
 
     // ---------- Seans sonu özeti / podyum ----------
-    const MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
-
-    // Sıra numarasına göre podyum sütunları (eşitlikte aynı sütunda birden fazla isim). Gösterim sırası: 2 - 1 - 3
+        // Sıra numarasına göre podyum sütunları (eşitlikte aynı sütunda birden fazla isim). Gösterim sırası: 2 - 1 - 3
     function getPodiumGroups(list) {
       const groups = [];
       [2, 1, 3].forEach(r => {
@@ -549,11 +630,11 @@
         <div class="podium-col">
           <div class="podium-name">${g.names.map(esc).join('<br>')}</div>
           <div class="podium-pts">${g.pts} puan</div>
-          <div class="podium-block r${g.rank}">${MEDALS[g.rank]}</div>
+          <div class="podium-block r${g.rank}">${g.rank}</div>
         </div>`).join('');
       el.innerHTML = `
         <div class="summary-card">
-          <div class="card-title" style="margin-bottom:0"><span>🏆 Seans Özeti</span><span style="font-size:0.75rem; color:var(--text-muted); font-weight:600">${formatDate(document.getElementById('session-date').value)}</span></div>
+          <div class="card-title" style="margin-bottom:0"><span>Seans Özeti</span><span style="font-size:0.75rem; color:var(--text-muted); font-weight:600">${formatDate(document.getElementById('session-date').value)}</span></div>
           <div class="podium" style="margin-bottom:0">${cols}</div>
         </div>`;
     }
@@ -663,13 +744,13 @@
     function setPeriod(v) {
       period = v;
       try { localStorage.setItem('tennis_period', v); } catch (e) {}
-      syncChips(); renderAllTimeStandings(); renderMatrix();
+      syncChips(); renderAllTimeStandings(); renderExtras();
     }
 
     function setSortMode(v) {
       sortMode = v;
       try { localStorage.setItem('tennis_sort', v); } catch (e) {}
-      syncChips(); renderAllTimeStandings(); renderMatrix();
+      syncChips(); renderAllTimeStandings(); renderExtras();
     }
 
     function fmt1(n) { return Number(n).toLocaleString('tr-TR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
@@ -721,38 +802,148 @@
       });
     }
 
-    function renderMatrix() {
-      const wrap = document.getElementById('matrix-wrap');
-      const list = allTimeList;
-      if (!list.length) {
+    function renderExtras() { renderRecords(); renderH2H(); }
+
+    // Seçili dönemdeki skoru girilmiş tüm maçlar, kronolojik sırada
+    function scoredSequence() {
+      const hist = getFilteredHistory().slice().sort((a, b) =>
+        String(a.date).localeCompare(String(b.date)) || (Number(a.id) - Number(b.id)));
+      const seq = [];
+      hist.forEach(sess => (sess.matches || []).forEach(m => {
+        if (m.score1 === null || m.score2 === null) return;
+        seq.push({ date: sess.date, round: m.round, p1: m.p1, p2: m.p2, s1: m.score1, s2: m.score2 });
+      }));
+      return seq;
+    }
+
+    function renderRecords() {
+      const wrap = document.getElementById('records-wrap');
+      const seq = scoredSequence();
+      if (!seq.length) {
         wrap.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem">${period === 'all' ? 'Henüz kaydedilmiş seans verisi yok.' : 'Bu dönemde kayıtlı seans yok.'}</p>`;
         return;
       }
-      const g = {};
-      getFilteredHistory().forEach(sess => (sess.matches || []).forEach(m => {
-        if (m.score1 === null || m.score2 === null) return;
-        [[m.p1, m.p2, m.score1, m.score2], [m.p2, m.p1, m.score2, m.score1]].forEach(([a, b, w, l]) => {
-          g[a] = g[a] || {};
-          const c = g[a][b] = g[a][b] || { won: 0, lost: 0, played: 0 };
-          c.won += w; c.lost += l; c.played++;
+      const muted = t => `<span style="color:var(--text-muted); font-weight:600">${t}</span>`;
+      const lines = (arr, fn) => arr.map(fn).join('<br>');
+
+      // 1) En çok puan alınan seans
+      let bestPts = -1, bestList = [];
+      getFilteredHistory().forEach(sess => {
+        const pts = {};
+        (sess.matches || []).forEach(m => {
+          if (m.score1 === null || m.score2 === null) return;
+          pts[m.p1] = (pts[m.p1] || 0) + m.score1;
+          pts[m.p2] = (pts[m.p2] || 0) + m.score2;
         });
-      }));
-      const short = n => (n.length > 6 ? n.slice(0, 5) + '…' : n);
-      const names = list.map(x => x.name);
-      let html = '<table class="matrix"><thead><tr><th class="rowh"></th>' +
-        names.map(n => `<th title="${esc(n)}">${esc(short(n))}</th>`).join('') + '</tr></thead><tbody>';
-      names.forEach((a, i) => {
-        html += `<tr><td class="rowh" title="${esc(a)}">${esc(a)}</td>`;
-        names.forEach((b, j) => {
-          if (i === j) { html += '<td class="m-self">–</td>'; return; }
-          const c = g[a] && g[a][b];
-          if (!c) { html += '<td class="m-none">·</td>'; return; }
-          const cls = c.won > c.lost ? 'm-win' : (c.won < c.lost ? 'm-loss' : 'm-eq');
-          html += `<td class="${cls}" title="${esc(a)} - ${esc(b)}: ${c.played} maç">${c.won}-${c.lost}</td>`;
+        Object.entries(pts).forEach(([n, v]) => {
+          if (v > bestPts) { bestPts = v; bestList = []; }
+          if (v === bestPts) bestList.push({ n, date: sess.date });
         });
-        html += '</tr>';
       });
-      wrap.innerHTML = html + '</tbody></table>';
+
+      // 2) En uzun galibiyet serisi (beraberlik ve mağlubiyet seriyi bozar)
+      const cur = {}, best = {}, curStart = {}, bestRange = {};
+      seq.forEach(m => {
+        [[m.p1, m.s1, m.s2], [m.p2, m.s2, m.s1]].forEach(([n, a, b]) => {
+          if (a > b) {
+            if (!cur[n]) curStart[n] = m.date;
+            cur[n] = (cur[n] || 0) + 1;
+            if (cur[n] > (best[n] || 0)) { best[n] = cur[n]; bestRange[n] = [curStart[n], m.date]; }
+          } else cur[n] = 0;
+        });
+      });
+      const rangeTxt = n => {
+        const [a, b] = bestRange[n];
+        return a === b ? formatDate(a) : `${formatDate(a)} - ${formatDate(b)}`;
+      };
+      const maxStreak = Math.max(0, ...Object.values(best));
+      const streakList = maxStreak >= 2 ? Object.keys(best).filter(n => best[n] === maxStreak) : [];
+
+      // 3) En çok yenilen rakip (aynı rakibe en çok yenilen oyuncu)
+      const losses = {};
+      seq.forEach(m => {
+        if (m.s1 === m.s2) return;
+        const [loser, winner] = m.s1 < m.s2 ? [m.p1, m.p2] : [m.p2, m.p1];
+        const k = loser + '\u0000' + winner;
+        losses[k] = (losses[k] || 0) + 1;
+      });
+      const maxLoss = Math.max(0, ...Object.values(losses));
+      const lossList = maxLoss >= 2 ? Object.keys(losses).filter(k => losses[k] === maxLoss).map(k => k.split('\u0000')) : [];
+
+      const none = '<div class="rec-val" style="color:var(--text-muted); font-weight:600">Henüz yok</div>';
+      wrap.innerHTML = `
+        <div class="rec-row">
+          <div><div class="rec-label">En Çok Puan Alınan Seans</div>
+            <div class="rec-val">${lines(bestList, x => `${esc(x.n)} ${muted('· ' + formatDate(x.date))}`)}</div></div>
+          <div class="rec-num">${bestPts}</div>
+        </div>
+        <div class="rec-row">
+          <div><div class="rec-label">En Uzun Galibiyet Serisi</div>
+            ${streakList.length ? `<div class="rec-val">${lines(streakList, n => `${esc(n)} ${muted('· ' + rangeTxt(n))}`)}</div>` : none}</div>
+          <div class="rec-num">${streakList.length ? maxStreak : '-'}</div>
+        </div>
+        <div class="rec-row">
+          <div><div class="rec-label">En Çok Yenilen Rakip</div>
+            ${lossList.length ? `<div class="rec-val">${lines(lossList, ([l, w]) => `${esc(l)} ${muted('← ' + esc(w))}`)}</div>` : none}</div>
+          <div class="rec-num">${lossList.length ? maxLoss : '-'}</div>
+        </div>`;
+    }
+
+    // ---------- İkili rekabet ----------
+    let h2hA = null, h2hB = null;
+    function setH2H(which, val) {
+      if (which === 'A') h2hA = val; else h2hB = val;
+      renderH2H();
+    }
+
+    function renderH2H() {
+      const wrap = document.getElementById('h2h-wrap');
+      const names = allTimeList.map(x => x.name);
+      if (names.length < 2) {
+        wrap.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem">İki oyuncu için yeterli kayıtlı veri yok.</p>';
+        return;
+      }
+      if (!names.includes(h2hA)) h2hA = names[0];
+      if (!names.includes(h2hB) || h2hB === h2hA) h2hB = names.find(n => n !== h2hA);
+      const opts = sel => names.map(n => `<option value="${esc(n)}" ${n === sel ? 'selected' : ''}>${esc(n)}</option>`).join('');
+
+      const games = scoredSequence().filter(m => (m.p1 === h2hA && m.p2 === h2hB) || (m.p1 === h2hB && m.p2 === h2hA));
+      let wA = 0, wB = 0, dr = 0, gA = 0, gB = 0;
+      const rows = games.slice().reverse().map(m => {
+        const a = m.p1 === h2hA ? m.s1 : m.s2, b = m.p1 === h2hA ? m.s2 : m.s1;
+        gA += a; gB += b;
+        let cls = 'm-eq';
+        if (a > b) { wA++; cls = 'm-win'; } else if (a < b) { wB++; cls = 'm-loss'; } else dr++;
+        return `<tr><td style="font-weight:700; color:#fff">${formatDate(m.date)}</td><td>${m.round}. Tur</td><td class="${cls}">${a} - ${b}</td></tr>`;
+      }).join('');
+
+      let body;
+      if (!games.length) {
+        body = '<p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px">Bu iki oyuncu arasında kayıtlı maç yok.</p>';
+      } else {
+        const tot = games.length;
+        body = `
+          <div class="h2h-score">
+            <div><div class="nm">${esc(h2hA)}</div><div class="big" style="color:var(--primary)">${wA}</div></div>
+            <div><div class="nm" style="color:var(--text-muted)">Beraberlik</div><div class="big" style="color:var(--text-muted); font-size:1.6rem">${dr}</div></div>
+            <div><div class="nm">${esc(h2hB)}</div><div class="big" style="color:var(--accent)">${wB}</div></div>
+          </div>
+          <div class="h2h-bar">
+            <div style="width:${wA / tot * 100}%; background:var(--primary)"></div>
+            <div style="width:${dr / tot * 100}%; background:#475569"></div>
+            <div style="width:${wB / tot * 100}%; background:var(--accent)"></div>
+          </div>
+          <div class="detail-sub" style="text-align:center; margin-bottom:6px">${tot} maç · oyun ${gA}-${gB}</div>
+          <div class="table-scroll" style="max-height:260px; overflow-y:auto">
+            <table><thead><tr><th>Tarih</th><th>Tur</th><th>${esc(h2hA)} - ${esc(h2hB)}</th></tr></thead><tbody>${rows}</tbody></table>
+          </div>`;
+      }
+      wrap.innerHTML = `
+        <div class="h2h-selects">
+          <select onchange="setH2H('A', this.value)" aria-label="1. oyuncu">${opts(h2hA)}</select>
+          <span style="color:var(--primary); font-weight:800; font-size:0.8rem">VS</span>
+          <select onchange="setH2H('B', this.value)" aria-label="2. oyuncu">${opts(h2hB)}</select>
+        </div>${body}`;
     }
 
     let allTimeList = [];
@@ -791,7 +982,7 @@
           (showDate ? `<text x="${X(i).toFixed(1)}" y="${H - 14}" text-anchor="middle" font-size="10" fill="#94a3b8">${esc(formatDate(sess[i].date).slice(0, 5))}</text>` : '');
       }).join('');
       const avgLine = `<line x1="${L}" y1="${Y(avg).toFixed(1)}" x2="${W - R}" y2="${Y(avg).toFixed(1)}" stroke="#eab308" stroke-width="1.5" stroke-dasharray="5 4"/>` +
-        `<text x="${W - R}" y="${(Y(avg) - 5).toFixed(1)}" text-anchor="end" font-size="10" font-weight="700" fill="#eab308">ort. ${fmt1(avg)}</text>`;
+        `<text x="${(L + 6)}" y="${(Y(avg) + 14).toFixed(1)}" text-anchor="start" font-size="10" font-weight="700" fill="#eab308">ort. ${fmt1(avg)}</text>`;
       return `<svg viewBox="0 0 ${W} ${H}" style="width:100%; height:auto; display:block; margin-top:6px" role="img" aria-label="Seans başına puan grafiği">` +
         grid + `<path d="${area}" fill="rgba(34,197,94,0.12)"/>` +
         `<path d="${line}" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>` +
@@ -844,7 +1035,7 @@
       const chart = sessionChart(ascSessions, sessions.length ? player.pts / sessions.length : 0);
       document.getElementById('player-modal-body').innerHTML = `
         <div class="detail-head">
-          <h3>🎾 ${esc(name)}</h3>
+          <h3>${BALL} ${esc(name)}</h3>
           <button class="btn btn-secondary btn-sm" style="width:auto; padding:6px 12px" onclick="closePlayerDetail()">Kapat</button>
         </div>
         <div class="detail-sub">${sessions.length} seans · seans başına ortalama ${avg} puan${period !== 'all' ? ' · ' + PERIOD_LABEL[period] : ''}</div>
@@ -876,13 +1067,21 @@
     function closePlayerDetail() { document.getElementById('player-modal').classList.remove('open'); }
 
     function saveCurrentSession() {
+      const missing = matches.length - playedCount();
+      if (missing > 0 && !confirm(`${missing} maçın skoru girilmedi. Bu maçlar puana ve klasmana sayılmaz. Yine de kaydedilsin mi?`)) return false;
       const date = document.getElementById('session-date').value || todayLocal();
       const sessionId = currentSessionId || Date.now();
       currentSessionId = sessionId;
       const session = { id: sessionId, date, players: currentPlayers, matches, standings: computeStats() };
       let history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
       
-      const existingIdx = history.findIndex(s => s.id === sessionId);
+      let existingIdx = history.findIndex(s => s.id === sessionId);
+      if (existingIdx === -1) {
+        // Aynı içerikte kayıt zaten varsa yenisini ekleme, onu güncelle
+        const sig = sessionSig(session);
+        existingIdx = history.findIndex(h => sessionSig(h) === sig);
+        if (existingIdx > -1) { session.id = history[existingIdx].id; currentSessionId = session.id; }
+      }
       if (existingIdx > -1) {
         history[existingIdx] = session;
       } else {
@@ -890,7 +1089,10 @@
       }
       localStorage.setItem('tennis_sessions', JSON.stringify(history));
       persistDraft();
-      toast("✅ Seans kaydedildi");
+      justSaved = true;
+      renderSavedBanner();
+      toast(missing > 0 ? `Kaydedildi (${missing} maç skorsuz)` : "Seans kaydedildi");
+      return true;
     }
 
     function deleteSession(sessionId) {
@@ -908,6 +1110,7 @@
       const d = getDraft();
       if (d && d.id !== sessionId && draftIsUnsaved(d) && countPlayed(d.matches) > 0 &&
           !confirm("Kaydedilmemiş yarım kalan bir seans var. Bu seansı açarsanız o silinecek. Devam edilsin mi?")) return;
+      undoStack = []; justSaved = false;
       currentSessionId = found.id;
       currentPlayers = found.players;
       matches = found.matches;
@@ -927,6 +1130,27 @@
       renderHistory();
     }
 
+    // Aynı içerikteki (tarih + oyuncular + skorlar) seansları tespit etmek için imza
+    function sessionSig(s) {
+      const ms = (s.matches || []).map(m => [m.round, m.p1, m.p2, m.score1, m.score2].join(':')).join('|');
+      return [s.date, (s.players || []).slice().sort().join(','), ms].join('#');
+    }
+
+    function removeDuplicates() {
+      const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
+      const seen = new Set(), keep = [];
+      history.forEach(h => {
+        const k = sessionSig(h);
+        if (seen.has(k)) return;
+        seen.add(k); keep.push(h);
+      });
+      const n = history.length - keep.length;
+      if (!n) { alert('Yinelenen seans bulunamadı.'); return; }
+      if (!confirm(`${n} yinelenen seans silinecek (aynı tarih, oyuncu ve skorlar). Devam edilsin mi?`)) return;
+      localStorage.setItem('tennis_sessions', JSON.stringify(keep));
+      renderHistory();
+    }
+
     function renderHistory() {
       const list = document.getElementById('history-list');
       const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
@@ -939,30 +1163,18 @@
         return `
           <div class="history-item">
             <div>
-              <div style="font-weight:700; font-size:0.92rem; color:#fff">📅 ${formatDate(s.date)} (${roundCount} Tur)</div>
+              <div style="font-weight:700; font-size:0.92rem; color:#fff">${formatDate(s.date)} (${roundCount} Tur · ${countPlayed(s.matches)}/${(s.matches || []).length} maç)</div>
               <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
-                Lider: 🥇 ${s.standings[0]?.name || '-'} (${s.standings[0]?.pts || 0} Puan)
+                Lider: ${s.standings[0]?.name || '-'} (${s.standings[0]?.pts || 0} Puan)
               </div>
             </div>
             <div style="display:flex; gap:6px;">
               <button class="btn btn-secondary btn-sm" onclick="loadSession(${s.id})">Aç / Düzenle</button>
-              <button class="btn btn-danger btn-sm" onclick="deleteSession(${s.id})">🗑️ Sil</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteSession(${s.id})">Sil</button>
             </div>
           </div>
         `;
       }).join('');
-    }
-
-    function shareWhatsApp() {
-      const date = document.getElementById('session-date').value;
-      const stats = computeStats();
-      let text = `🎾 *Tenis Skor (${date})*\n\n*Puan Durumu:*\n`;
-      stats.forEach((s, i) => text += `${s.rank}. ${s.name} - ${s.pts} Puan (${s.won}-${s.lost})\n`);
-      text += `\n*Maç Skorları:*\n`;
-      matches.forEach(m => {
-        if(m.score1 !== null) text += `• [${m.round}. Tur] ${m.p1} ${m.score1} - ${m.score2} ${m.p2}\n`;
-      });
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`);
     }
 
     function importData(input) {
@@ -970,25 +1182,30 @@
       input.value = ''; // aynı dosya tekrar seçilebilsin
       if (!file) return;
       const reader = new FileReader();
-      reader.onerror = () => alert('❌ Dosya okunamadı.');
+      reader.onerror = () => alert('Dosya okunamadı.');
       reader.onload = () => {
         let incoming;
-        try { incoming = JSON.parse(reader.result); } catch (e) { alert('❌ Geçersiz yedek dosyası (JSON okunamadı).'); return; }
-        if (!Array.isArray(incoming)) { alert('❌ Bu dosya bir seans yedeği gibi görünmüyor.'); return; }
+        try { incoming = JSON.parse(reader.result); } catch (e) { alert('Geçersiz yedek dosyası (JSON okunamadı).'); return; }
+        if (!Array.isArray(incoming)) { alert('Bu dosya bir seans yedeği gibi görünmüyor.'); return; }
         const valid = incoming.filter(x => x && typeof x === 'object' && x.id !== undefined && Array.isArray(x.players) && Array.isArray(x.matches));
-        if (!valid.length) { alert('❌ Dosyada geçerli seans bulunamadı.'); return; }
+        if (!valid.length) { alert('Dosyada geçerli seans bulunamadı.'); return; }
 
         const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
         const existing = new Set(history.map(h => h.id));
-        const fresh = valid.filter(x => !existing.has(x.id));
+        const sigs = new Set(history.map(sessionSig));
+        const fresh = valid.filter(x => {
+          const k = sessionSig(x);
+          if (existing.has(x.id) || sigs.has(k)) return false;
+          existing.add(x.id); sigs.add(k); return true;
+        });
         const skipped = valid.length - fresh.length;
-        if (!fresh.length) { alert('ℹ️ Dosyadaki tüm seanslar zaten kayıtlı, eklenecek yeni seans yok.'); return; }
+        if (!fresh.length) { alert('Dosyadaki tüm seanslar zaten kayıtlı, eklenecek yeni seans yok.'); return; }
         if (!confirm(`${fresh.length} yeni seans eklenecek${skipped ? ` (${skipped} seans zaten kayıtlı, atlanacak)` : ''}. Mevcut kayıtlar korunur. Devam edilsin mi?`)) return;
 
         const merged = [...history, ...fresh].sort((a, b) => String(b.date).localeCompare(String(a.date)) || (Number(b.id) - Number(a.id)));
         localStorage.setItem('tennis_sessions', JSON.stringify(merged));
         renderHistory();
-        alert(`✅ ${fresh.length} seans içe aktarıldı.`);
+        alert(`${fresh.length} seans içe aktarıldı.`);
       };
       reader.readAsText(file);
     }
@@ -1013,6 +1230,8 @@
       } catch (e) {}
       renderPlayerInputs();
     })();
+
+    const BALL = `<svg class="ball-icon" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="46" r="40" fill="#bef264"/><path d="M17 18c11 9 11 51 0 60M79 18c-11 9-11 51 0 60" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="17" y="35" width="62" height="30" rx="10" fill="#0f172a"/><text x="48" y="58" text-anchor="middle" font-size="22" font-weight="900" font-style="italic" fill="#fff" letter-spacing="-0.5" font-family="'Source Sans 3', system-ui, sans-serif">0<tspan fill="#bef264">-</tspan>40</text></svg>`;
 
     // ---------- Otomatik taslak kaydı ----------
     const DRAFT_KEY = 'tennis_draft';
@@ -1055,7 +1274,7 @@
       box.innerHTML = `
         <div class="draft-card">
           <div>
-            <div style="font-weight:800">⏳ Yarım kalan seans var</div>
+            <div style="font-weight:800">Yarım kalan seans var</div>
             <div style="font-size:0.78rem; opacity:0.85; margin-top:2px">${formatDate(d.date)} · ${d.players.length} oyuncu · ${countPlayed(d.matches)}/${d.matches.length} maç oynandı</div>
           </div>
           <div style="display:flex; gap:8px;">
@@ -1068,7 +1287,8 @@
     function resumeDraft() {
       const d = getDraft();
       if (!d) return;
-      currentSessionId = d.id || Date.now();
+      undoStack = []; justSaved = false;
+      currentSessionId = d.id || null;
       currentPlayers = d.players;
       matches = d.matches;
       playerCount = Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, d.players.length));

@@ -1,5 +1,5 @@
 // Tenis Skor - çevrimdışı çalışma için basit service worker
-const CACHE = 'tenis-skor-v1';
+const CACHE = 'tenis-skor-v3';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-180.png'];
 
 self.addEventListener('install', event => {
@@ -20,7 +20,21 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const req = event.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  const isFont = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
+  if (req.method !== 'GET' || (url.origin !== self.location.origin && !isFont)) return;
+
+  // Yazı tipi: önce önbellek, yoksa internetten al ve sakla (çevrimdışıyken de aynı yazı tipi görünsün)
+  if (isFont) {
+    event.respondWith(
+      caches.match(req).then(hit => hit || fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(req, copy));
+        return res;
+      }).catch(() => hit))
+    );
+    return;
+  }
 
   // Sayfa açılışı: önce ağ (güncelleme gelsin), internet yoksa önbellek
   if (req.mode === 'navigate') {
