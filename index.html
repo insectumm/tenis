@@ -34,14 +34,18 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding-bottom: 80px; min-height: 100vh; }
     
-    header { background: #0f172a; border-bottom: 1px solid var(--border); padding: 16px; padding-top: calc(16px + env(safe-area-inset-top, 0px)); text-align: center; position: sticky; top: 0; z-index: 50; }
+    header { background: #0f172a; border-bottom: 1px solid var(--border); padding: 16px; padding-top: calc(16px + env(safe-area-inset-top, 0px)); text-align: center; position: relative; }
+    .top-bar { position: sticky; top: 0; z-index: 50; }
+    html { scroll-padding-top: 140px; }
     header h1 { font-size: 1.35rem; font-weight: 900; font-style: italic; text-transform: lowercase; color: #fff; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     
-    .nav-tabs { display: flex; background: #0d1527; border-bottom: 1px solid var(--border); position: sticky; top: calc(55px + env(safe-area-inset-top, 0px)); z-index: 40; }
-    .tab-btn { flex: 1; padding: 13px 6px; font-size: 0.82rem; font-weight: 700; text-align: center; border: none; background: none; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
+    .nav-tabs { display: flex; justify-content: space-evenly; background: #0d1527; border-bottom: 1px solid var(--border); padding: 0 max(10px, calc((100% - 600px) / 2 + 10px)); overflow-x: auto; scrollbar-width: none; }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 0 0 auto; padding: 13px 10px; font-size: 0.82rem; font-weight: 700; text-align: center; border: none; background: none; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; white-space: nowrap; }
+    @media (max-width: 370px) { .tab-btn { padding: 13px 6px; font-size: 0.76rem; } .nav-tabs { padding-inline: 6px; } }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(34, 197, 94, 0.05); }
 
-    .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+    .container { max-width: 600px; margin: 0 auto; padding: 16px; overflow-x: clip; }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
     .card-title { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
     
@@ -101,6 +105,31 @@
     .table-scroll { overflow-x: auto; }
 
 
+    /* ---- Filtre / ay başlığı ---- */
+    .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .filter-row select { width: 100%; padding: 10px 8px; background: var(--card-inner); color: #fff; border: 1px solid var(--border); border-radius: 9px; font-size: 0.85rem; font-weight: 700; outline: none; }
+    .month-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.8rem; font-weight: 800; color: var(--primary); margin: 14px 0 2px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+    .month-head span + span { color: var(--text-muted); font-weight: 600; font-size: 0.74rem; }
+    .form-dots { display: flex; gap: 5px; align-items: center; }
+    .form-dot { width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; }
+    .form-dot.w { background: rgba(34,197,94,0.2); color: #4ade80; }
+    .form-dot.l { background: rgba(239,68,68,0.18); color: #f87171; }
+    /* ---- Tekliler ---- */
+    .chip-row { display: flex; gap: 6px; }
+    .chip-row .chip { flex: 1; padding: 11px 4px; border-radius: 9px; }
+    .set-grid { display: grid; grid-template-columns: 54px 1fr 1fr; gap: 8px; align-items: center; }
+    .set-grid .nm { text-align: center; font-size: 0.8rem; font-weight: 800; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .set-row { margin-bottom: 8px; }
+    .set-row .set-label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); }
+    .set-row input[type="text"] { text-align: center; font-weight: 800; font-size: 1.05rem; padding: 10px 4px; }
+    .tb-line .set-label { font-size: 0.68rem; }
+    .tb-line input[type="text"] { font-size: 0.9rem; padding: 7px 4px; }
+    .set-msg { font-size: 0.74rem; color: #f87171; margin-top: 4px; min-height: 0; }
+    .s-live { background: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin: 6px 0 12px; font-size: 0.88rem; font-weight: 700; color: #fff; text-align: center; }
+    .s-live.muted { color: var(--text-muted); font-weight: 600; }
+    .s-note { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+    #s-save:disabled { opacity: 0.45; cursor: not-allowed; }
+
     /* ---- Yeni: kurulum butonu, ilerleme, özet, chip, matris, toast ---- */
     .install-btn { position: absolute; right: 12px; bottom: 14px; display: none; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 99px; border: 1px solid var(--primary); background: rgba(34,197,94,0.12); color: var(--primary); font-size: 0.72rem; font-weight: 800; cursor: pointer; }
     .draft-card { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.35); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 14px; color: #fde68a; font-size: 0.9rem; }
@@ -150,16 +179,19 @@
 </head>
 <body>
 
+  <div class="top-bar">
   <header>
     <h1><svg class="ball-icon" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="46" r="40" fill="#bef264"/><path d="M17 18c11 9 11 51 0 60M79 18c-11 9-11 51 0 60" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="17" y="35" width="62" height="30" rx="10" fill="#0f172a"/><text x="48" y="58" text-anchor="middle" font-size="22" font-weight="900" font-style="italic" fill="#fff" letter-spacing="-0.5" font-family="'Source Sans 3', system-ui, sans-serif">0<tspan fill="#bef264">-</tspan>40</text></svg> Tenis Skor</h1>
     <button class="install-btn" id="install-btn">⬇ Yükle</button>
   </header>
 
   <nav class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('tab-matches', this)">Maçlar & Skor</button>
+    <button class="tab-btn active" onclick="switchTab('tab-matches', this)">Turnuva</button>
     <button class="tab-btn" onclick="switchTab('tab-standings', this)">Puan Durumu</button>
-    <button class="tab-btn" onclick="switchTab('tab-history', this)">Seans Geçmişi</button>
+    <button class="tab-btn" onclick="switchTab('tab-singles', this)">Tekli</button>
+    <button class="tab-btn" onclick="switchTab('tab-history', this)">Geçmiş</button>
   </nav>
+  </div>
 
   <div class="container">
     
@@ -167,7 +199,7 @@
     <div id="tab-matches">
       <div id="draft-banner"></div>
       <div class="card" id="setup-card">
-        <div class="card-title">Seans ve Oyuncu Girişi</div>
+        <div class="card-title">Seans Girişi</div>
         <div style="margin-bottom: 12px;">
           <label>Seans Tarihi</label>
           <input type="date" id="session-date" onchange="persistDraft()">
@@ -228,7 +260,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title" id="alltime-title">Tüm Zamanlar Genel Klasmanı</div>
+        <div class="card-title" id="alltime-title">Tüm Zamanlar Genel Puan Durumu</div>
         <div class="chips" id="sort-chips">
           <span class="chips-label">Sırala:</span>
           <button class="chip" data-sort="pts" onclick="setSortMode('pts')">Puan</button>
@@ -264,6 +296,82 @@
       </div>
     </div>
 
+    <!-- SEKME 4: TEKLİLER -->
+    <div id="tab-singles" style="display: none;">
+      <div class="card">
+        <div class="card-title"><span>Yeni Tekli Maç</span></div>
+        <div class="input-grid">
+          <div><label for="s-p1">1. Oyuncu</label><input type="text" id="s-p1" list="s-names" placeholder="İsim" maxlength="20" autocomplete="off" oninput="sUpdate()"></div>
+          <div><label for="s-p2">2. Oyuncu</label><input type="text" id="s-p2" list="s-names" placeholder="İsim" maxlength="20" autocomplete="off" oninput="sUpdate()"></div>
+        </div>
+        <datalist id="s-names"></datalist>
+        <div class="input-grid">
+          <div><label for="s-date">Tarih</label><input type="date" id="s-date" onchange="onSingleDate()"></div>
+          <div><label>Maç formatı</label>
+            <div class="chip-row" id="s-format">
+              <button class="chip" data-bo="1" onclick="sSetFormat(1)">1 Set</button>
+              <button class="chip" data-bo="3" onclick="sSetFormat(3)">3 Set</button>
+              <button class="chip" data-bo="5" onclick="sSetFormat(5)">5 Set</button>
+            </div>
+          </div>
+        </div>
+        <div class="detail-sub" style="margin-bottom:10px">Seti çoğunluğu alan kazanır. 6-6'da tie-break: 7'ye, 2 farkla; en fazla 10-9 veya 10-8 ile biter.</div>
+        <div id="s-head"></div>
+        <div id="s-sets"></div>
+        <div id="s-live" class="s-live"></div>
+        <div style="display:flex; gap:8px">
+          <button class="btn btn-primary" id="s-save" onclick="saveSingle()">Maçı Kaydet</button>
+          <button class="btn btn-outline" style="width:auto; padding:12px 16px" onclick="clearSingleForm()">Temizle</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span id="s-day-title">Günün Skoru</span></div>
+        <div id="s-day"></div>
+      </div>
+
+      <div class="chips" id="s-period-chips" style="margin-top:4px">
+        <span class="chips-label">Dönem:</span>
+        <button class="chip" data-speriod="all" onclick="setSinglePeriod('all')">Tümü</button>
+        <button class="chip" data-speriod="year" onclick="setSinglePeriod('year')">Bu yıl</button>
+        <button class="chip" data-speriod="month" onclick="setSinglePeriod('month')">Bu ay</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span id="s-standings-title">Tekli Puan Durumu</span></div>
+        <div class="chips" id="s-sort-chips">
+          <span class="chips-label">Sırala:</span>
+          <button class="chip" data-ssort="wins" onclick="setSingleSort('wins')">Galibiyet</button>
+          <button class="chip" data-ssort="rate" onclick="setSingleSort('rate')">Galibiyet oranı</button>
+        </div>
+        <div class="table-scroll" id="s-standings"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>İkili Karşılaşma</span></div>
+        <div id="s-h2h"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span id="s-stats-title">Genel İstatistikler</span></div>
+        <div id="s-stats"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Maç Geçmişi</span>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+            <button class="btn btn-outline btn-sm" onclick="exportSingles()">Dışa Aktar</button>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('s-import-file').click()">İçe Aktar</button>
+            <input type="file" id="s-import-file" accept=".json,application/json" style="display:none" onchange="importSingles(this)">
+            <button class="btn btn-danger btn-sm" onclick="clearSingles()">Tümünü Sil</button>
+          </div>
+        </div>
+        <div id="s-hist-filters"></div>
+        <div id="s-history"></div>
+      </div>
+    </div>
+
     <!-- SEKME 3: GEÇMİŞ SEANSLAR -->
     <div id="tab-history" style="display: none;">
       <div class="card">
@@ -277,6 +385,7 @@
             <button class="btn btn-danger btn-sm" onclick="clearAllHistory()">Tümünü Sil</button>
           </div>
         </div>
+        <div id="hist-filters"></div>
         <div id="history-list"></div>
       </div>
     </div>
@@ -350,10 +459,12 @@
       }
     }
 
-    function switchTab(tabId, el) {
+    const TAB_ORDER = ['tab-matches', 'tab-standings', 'tab-singles', 'tab-history'];
+    function switchTab(tabId, el, dir) {
+      const prevIdx = TAB_ORDER.findIndex(id => document.getElementById(id).style.display !== 'none');
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       if(el) el.classList.add('active');
-      ['tab-matches', 'tab-standings', 'tab-history'].forEach(id => {
+      ['tab-matches', 'tab-standings', 'tab-history', 'tab-singles'].forEach(id => {
         document.getElementById(id).style.display = (id === tabId) ? 'block' : 'none';
       });
       if(tabId === 'tab-standings') {
@@ -363,6 +474,15 @@
         renderExtras();
       }
       if(tabId === 'tab-history') renderHistory();
+      if(tabId === 'tab-singles') renderSingles();
+      const newIdx = TAB_ORDER.indexOf(tabId);
+      if (prevIdx !== newIdx) window.scrollTo({ top: 0 });
+      if (prevIdx !== newIdx && prevIdx > -1 && document.getElementById(tabId).animate && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+        const d = dir || (newIdx > prevIdx ? 1 : -1);
+        document.getElementById(tabId).animate(
+          [{ transform: `translateX(${d * 42}px)`, opacity: 0 }, { transform: 'translateX(0)', opacity: 1 }],
+          { duration: 280, easing: 'cubic-bezier(0.22, 0.8, 0.3, 1)' });
+      }
     }
 
     // N oyuncu için tek tur = herkes herkesle bir kez eşleşir
@@ -738,7 +858,7 @@
     function syncChips() {
       document.querySelectorAll('#period-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.period === period));
       document.querySelectorAll('#sort-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.sort === sortMode));
-      document.getElementById('alltime-title').innerText = `${PERIOD_LABEL[period]} Genel Klasmanı`;
+      document.getElementById('alltime-title').innerText = `${PERIOD_LABEL[period]} Genel Puan Durumu`;
     }
 
     function setPeriod(v) {
@@ -989,11 +1109,44 @@
         avgLine + dots + '</svg>';
     }
 
+    // ---------- Oyuncu profili (Seans + Tekli) ----------
+    let profName = null, profView = 'session', profAllSessions = false;
+
     function showPlayerDetail(idx) {
-      const player = allTimeList[idx];
-      if (!player) return;
-      const name = player.name;
+      const p = allTimeList[idx];
+      if (p) openProfile(p.name, 'session');
+    }
+    function openProfile(name, view) {
+      profName = name; profView = view; profAllSessions = false;
+      renderProfile();
+      document.getElementById('player-modal-body').scrollTop = 0;
+      document.getElementById('player-modal').classList.add('open');
+    }
+    function setProfileView(v) {
+      profView = v; profAllSessions = false;
+      renderProfile();
+      document.getElementById('player-modal-body').scrollTop = 0;
+    }
+    function toggleProfSessions() { profAllSessions = !profAllSessions; renderProfile(); }
+
+    function renderProfile() {
+      const body = profView === 'single' ? singleProfileHTML(profName) : sessionProfileHTML(profName);
+      document.getElementById('player-modal-body').innerHTML = `
+        <div class="detail-head">
+          <h3>${BALL} ${esc(profName)}</h3>
+          <button class="btn btn-secondary btn-sm" style="width:auto; padding:6px 12px" onclick="closePlayerDetail()">Kapat</button>
+        </div>
+        <div class="chip-row" style="margin:8px 0 12px">
+          <button class="chip ${profView === 'session' ? 'active' : ''}" onclick="setProfileView('session')">Turnuva</button>
+          <button class="chip ${profView === 'single' ? 'active' : ''}" onclick="setProfileView('single')">Tekli</button>
+        </div>` + body;
+    }
+
+    function sessionProfileHTML(name) {
       const history = getFilteredHistory();
+      const allM = [];
+      history.forEach(sess => (sess.matches || []).forEach(m => allM.push(m)));
+      const player = computeStats(allM, [name]).find(x => x.name === name) || { played: 0, w: 0, d: 0, l: 0, pts: 0, won: 0, lost: 0 };
 
       const opp = {};      // rakip bazlı
       const sessions = []; // seans bazlı
@@ -1013,31 +1166,31 @@
         });
         if (row.played > 0) sessions.push(row);
       });
+      if (!sessions.length) {
+        return `<div class="detail-sub">${period === 'all' ? 'Bu oyuncunun kayıtlı turnuva seansı yok.' : 'Bu dönemde kayıtlı turnuva seansı yok.'}</div>`;
+      }
 
       sessions.sort((a, b) => String(b.date).localeCompare(String(a.date)));
       const opps = Object.values(opp).sort((a, b) => b.played - a.played || b.pts - a.pts);
-
       const oppRows = opps.map(o => `
         <tr>
           <td style="font-weight:700; color:#fff">${esc(o.name)}</td>
           <td>${o.played}</td><td>${o.w}</td><td>${o.d}</td><td>${o.l}</td>
           <td>${o.pts}-${o.lost}</td>
         </tr>`).join('');
-      const sessRows = sessions.map(r => `
+      const shown = profAllSessions ? sessions : sessions.slice(0, 10);
+      const sessRows = shown.map(r => `
         <tr>
           <td style="font-weight:700; color:#fff">${formatDate(r.date)}</td>
           <td>${r.played}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td>
           <td style="font-weight:900; color:var(--primary)">${r.pts}</td>
         </tr>`).join('');
+      const moreBtn = sessions.length > 10
+        ? `<button class="btn btn-secondary btn-sm" style="width:100%; margin-top:8px" onclick="toggleProfSessions()">${profAllSessions ? 'Son 10 seansı göster' : `Tüm ${sessions.length} seansı göster`}</button>` : '';
 
-      const avg = sessions.length ? fmt1(player.pts / sessions.length) : '0';
-      const ascSessions = [...sessions].reverse();
-      const chart = sessionChart(ascSessions, sessions.length ? player.pts / sessions.length : 0);
-      document.getElementById('player-modal-body').innerHTML = `
-        <div class="detail-head">
-          <h3>${BALL} ${esc(name)}</h3>
-          <button class="btn btn-secondary btn-sm" style="width:auto; padding:6px 12px" onclick="closePlayerDetail()">Kapat</button>
-        </div>
+      const avg = fmt1(player.pts / sessions.length);
+      const chart = sessionChart([...sessions].reverse(), player.pts / sessions.length);
+      return `
         <div class="detail-sub">${sessions.length} seans · seans başına ortalama ${avg} puan${period !== 'all' ? ' · ' + PERIOD_LABEL[period] : ''}</div>
         <div class="stat-chips">
           <div class="stat-chip"><b>${player.played}</b><span>Maç</span></div>
@@ -1052,23 +1205,74 @@
         <div class="detail-section">Rakiplere Göre</div>
         <div class="table-scroll"><table>
           <thead><tr><th>Rakip</th><th>O</th><th>G</th><th>B</th><th>M</th><th>Oyun</th></tr></thead>
-          <tbody>${oppRows || '<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Veri yok.</td></tr>'}</tbody>
+          <tbody>${oppRows}</tbody>
         </table></div>
 
-        <div class="detail-section">Seanslara Göre</div>
+        <div class="detail-section">Seanslara Göre${sessions.length > 10 && !profAllSessions ? ' (son 10)' : ''}</div>
         <div class="table-scroll"><table>
           <thead><tr><th>Tarih</th><th>O</th><th>G</th><th>B</th><th>M</th><th>Puan</th></tr></thead>
-          <tbody>${sessRows || '<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Veri yok.</td></tr>'}</tbody>
+          <tbody>${sessRows}</tbody>
+        </table></div>${moreBtn}
+      `;
+    }
+
+    function singleProfileHTML(name) {
+      const list = sFiltered().filter(m => m.p1 === name || m.p2 === name);
+      if (!list.length) return `<div class="detail-sub">${sPeriod === 'all' ? 'Bu oyuncunun kayıtlı tekli maçı yok.' : 'Bu dönemde kayıtlı tekli maç yok.'}</div>`;
+      let w = 0, l = 0, sw = 0, sl = 0, gw = 0, gl = 0, tw = 0, tl = 0, cur = 0, best = 0;
+      const opp = {}, rows = [];
+      list.forEach(m => {
+        const o = orient(m, name);
+        o.win ? w++ : l++;
+        sw += o.sa; sl += o.sb; gw += o.ga; gl += o.gb;
+        if (o.win) { cur++; if (cur > best) best = cur; } else cur = 0;
+        m.sets.forEach(s => { if (isTBSet(s)) { (o.flip ? s.b > s.a : s.a > s.b) ? tw++ : tl++; } });
+        const x = opp[o.opp] = opp[o.opp] || { name: o.opp, o: 0, w: 0, l: 0, sw: 0, sl: 0, gw: 0, gl: 0 };
+        x.o++; o.win ? x.w++ : x.l++; x.sw += o.sa; x.sl += o.sb; x.gw += o.ga; x.gl += o.gb;
+        rows.push(o);
+      });
+      const n = list.length;
+      const oppRows = Object.values(opp).sort((a, b) => b.o - a.o || b.w - a.w).map(x => `
+        <tr><td style="font-weight:700; color:#fff">${esc(x.name)}</td><td>${x.o}</td><td style="color:#4ade80; font-weight:800">${x.w}</td><td style="color:#f87171; font-weight:800">${x.l}</td><td>${x.sw}-${x.sl}</td><td>${x.gw}-${x.gl}</td></tr>`).join('');
+      const recent = rows.slice(-10).reverse().map(o => `
+        <tr><td style="font-weight:700; color:#fff">${formatDate(o.date)}</td><td>${esc(o.opp)}</td><td>${fmtSets(o.m, o.flip)}</td><td class="${o.win ? 'm-win' : 'm-loss'}">${o.win ? 'G' : 'M'} ${o.sa}-${o.sb}</td></tr>`).join('');
+      const dots = rows.slice(-5).map(o => `<span class="form-dot ${o.win ? 'w' : 'l'}">${o.win ? 'G' : 'M'}</span>`).join('');
+      return `
+        <div class="detail-sub">${n} maç${sPeriod !== 'all' ? ' · ' + PERIOD_LABEL[sPeriod] : ''}</div>
+        <div class="stat-chips">
+          <div class="stat-chip"><b>${n}</b><span>Maç</span></div>
+          <div class="stat-chip"><b>${w}-${l}</b><span>G-M</span></div>
+          <div class="stat-chip"><b style="color:var(--primary)">%${Math.round(w / n * 100)}</b><span>Oran</span></div>
+          <div class="stat-chip"><b>${best}</b><span>En uzun seri</span></div>
+        </div>
+        <div class="stat-chips" style="grid-template-columns:repeat(3,1fr); margin-top:8px">
+          <div class="stat-chip"><b>${sw}-${sl}</b><span>Set</span></div>
+          <div class="stat-chip"><b>${gw}-${gl}</b><span>Oyun</span></div>
+          <div class="stat-chip"><b>${tw}-${tl}</b><span>Tie-break</span></div>
+        </div>
+
+        <div class="detail-section">Son ${Math.min(5, n)} Maç</div>
+        <div class="form-dots" style="margin-top:6px">${dots}</div>
+
+        <div class="detail-section">Rakiplere Göre</div>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Rakip</th><th>O</th><th>G</th><th>M</th><th>Set</th><th>Oyun</th></tr></thead>
+          <tbody>${oppRows}</tbody>
+        </table></div>
+
+        <div class="detail-section">Son Maçlar${n > 10 ? ' (son 10)' : ''}</div>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Tarih</th><th>Rakip</th><th>Skor</th><th>Sonuç</th></tr></thead>
+          <tbody>${recent}</tbody>
         </table></div>
       `;
-      document.getElementById('player-modal').classList.add('open');
     }
 
     function closePlayerDetail() { document.getElementById('player-modal').classList.remove('open'); }
 
     function saveCurrentSession() {
       const missing = matches.length - playedCount();
-      if (missing > 0 && !confirm(`${missing} maçın skoru girilmedi. Bu maçlar puana ve klasmana sayılmaz. Yine de kaydedilsin mi?`)) return false;
+      if (missing > 0 && !confirm(`${missing} maçın skoru girilmedi. Bu maçlar puana ve puan durumuna sayılmaz. Yine de kaydedilsin mi?`)) return false;
       const date = document.getElementById('session-date').value || todayLocal();
       const sessionId = currentSessionId || Date.now();
       currentSessionId = sessionId;
@@ -1151,30 +1355,79 @@
       renderHistory();
     }
 
+    // ---------- Geçmiş listeleri: ay başlıkları, filtre, sayfalama ----------
+    const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+    function monthLabel(ym) {
+      const m = /^(\d{4})-(\d{2})$/.exec(ym || '');
+      return m && MONTHS_TR[Number(m[2]) - 1] ? `${MONTHS_TR[Number(m[2]) - 1]} ${m[1]}` : 'Tarihsiz';
+    }
+    const PAGE = 20;
+    let histF = { player: '', month: '', limit: PAGE };
+    let sHistF = { player: '', month: '', limit: PAGE };
+
+    function filterBarHTML(fn, players, months, st) {
+      const po = players.map(n => `<option value="${esc(n)}" ${n === st.player ? 'selected' : ''}>${esc(n)}</option>`).join('');
+      const mo = months.map(m => `<option value="${esc(m)}" ${m === st.month ? 'selected' : ''}>${esc(monthLabel(m))}</option>`).join('');
+      return `<div class="filter-row">
+        <select onchange="${fn}('player', this.value)" aria-label="Oyuncuya göre filtrele"><option value="">Tüm oyuncular</option>${po}</select>
+        <select onchange="${fn}('month', this.value)" aria-label="Aya göre filtrele"><option value="">Tüm aylar</option>${mo}</select>
+      </div>`;
+    }
+
+    function groupedHTML(items, limit, unit, itemHTML, moreFn) {
+      const counts = {};
+      items.forEach(x => { const k = String(x.date || '').slice(0, 7); counts[k] = (counts[k] || 0) + 1; });
+      let html = '', cur = null;
+      items.slice(0, limit).forEach(x => {
+        const k = String(x.date || '').slice(0, 7);
+        if (k !== cur) {
+          cur = k;
+          html += `<div class="month-head"><span>${esc(monthLabel(k))}</span><span>${counts[k]} ${unit}</span></div>`;
+        }
+        html += itemHTML(x);
+      });
+      if (items.length > limit) html += `<button class="btn btn-secondary" style="margin-top:12px" onclick="${moreFn}()">Daha fazla göster (${items.length - limit})</button>`;
+      return html;
+    }
+
+    function setHistFilter(k, v) { histF[k] = v; histF.limit = PAGE; renderHistory(); }
+    function moreHistory() { histF.limit += PAGE; renderHistory(); }
+
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
-      if(!history.length) {
+      const bar = document.getElementById('hist-filters');
+      const all = JSON.parse(localStorage.getItem('tennis_sessions') || '[]')
+        .sort((a, b) => String(b.date).localeCompare(String(a.date)) || (Number(b.id) - Number(a.id)));
+      if (!all.length) {
+        bar.innerHTML = '';
         list.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem">Henüz kayıtlı seans yok.</p>';
         return;
       }
-      list.innerHTML = history.map(s => {
+      const players = [...new Set(all.flatMap(s => s.players || []))].sort((a, b) => a.localeCompare(b, 'tr'));
+      const months = [...new Set(all.map(s => String(s.date || '').slice(0, 7)))].filter(Boolean);
+      if (histF.player && !players.includes(histF.player)) histF.player = '';
+      if (histF.month && !months.includes(histF.month)) histF.month = '';
+      const items = all.filter(s => (!histF.player || (s.players || []).includes(histF.player)) &&
+        (!histF.month || String(s.date || '').startsWith(histF.month)));
+      bar.innerHTML = (all.length > 3 ? filterBarHTML('setHistFilter', players, months, histF) : '') +
+        `<div class="detail-sub" style="margin-bottom:0">${items.length === all.length ? all.length + ' seans' : items.length + ' / ' + all.length + ' seans'}</div>`;
+      if (!items.length) { list.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem; margin-top:10px">Bu filtreyle eşleşen seans yok.</p>'; return; }
+      list.innerHTML = groupedHTML(items, histF.limit, 'seans', s => {
         const roundCount = new Set((s.matches || []).map(m => m.round)).size || 1;
         return `
           <div class="history-item">
             <div>
               <div style="font-weight:700; font-size:0.92rem; color:#fff">${formatDate(s.date)} (${roundCount} Tur · ${countPlayed(s.matches)}/${(s.matches || []).length} maç)</div>
               <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
-                Lider: ${s.standings[0]?.name || '-'} (${s.standings[0]?.pts || 0} Puan)
+                Lider: ${esc(s.standings[0]?.name || '-')} (${s.standings[0]?.pts || 0} Puan)
               </div>
             </div>
             <div style="display:flex; gap:6px;">
               <button class="btn btn-secondary btn-sm" onclick="loadSession(${s.id})">Aç / Düzenle</button>
               <button class="btn btn-danger btn-sm" onclick="deleteSession(${s.id})">Sil</button>
             </div>
-          </div>
-        `;
-      }).join('');
+          </div>`;
+      }, 'moreHistory');
     }
 
     function importData(input) {
@@ -1325,6 +1578,585 @@
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && document.getElementById('fixture-container').style.display === 'block') keepAwake(true);
     });
+
+    // ---------- TEKLİLER (1'e 1 set usulü maçlar) ----------
+    const S_KEY = 'tennis_singles';
+    const S_LAST = 'tennis_singles_last';
+    const S_DRAFT = 'tennis_singles_draft';
+    let sBestOf = 3;
+    let sSets = Array.from({ length: 5 }, () => ({ a: '', b: '', ta: '', tb: '' }));
+    let sH2HA = null, sH2HB = null;
+    let sReady = false;
+
+    const sEl = id => document.getElementById(id);
+    const sNum = v => (v === '' || v === null || v === undefined) ? null : parseInt(v, 10);
+
+    function getSingles() {
+      try { const x = JSON.parse(localStorage.getItem(S_KEY) || '[]'); return Array.isArray(x) ? x : []; } catch (e) { return []; }
+    }
+    function saveSinglesList(arr) { localStorage.setItem(S_KEY, JSON.stringify(arr)); }
+
+    // Set skoru geçerli mi: 6-0..6-4, 7-5, 7-6
+    function validSetScore(a, b) {
+      const hi = Math.max(a, b), lo = Math.min(a, b);
+      return (hi === 6 && lo <= 4) || (hi === 7 && (lo === 5 || lo === 6));
+    }
+    // Tie-break: 7'ye 2 fark, 6-6'dan sonra 2 fark, en fazla 10 (10-9 veya 10-8)
+    function validTB(w, l) {
+      if (!(w > l) || l < 0) return false;
+      if (w === 7) return l <= 5;
+      if (w > 7 && w < 10) return w - l === 2;
+      if (w === 10) return l === 8 || l === 9;
+      return false;
+    }
+    const isTBSet = s => Math.max(s.a, s.b) === 7 && Math.min(s.a, s.b) === 6;
+
+    // Kayıtlı maçı temizleyip doğrular (içe aktarma ve okuma için)
+    function sNormalize(x) {
+      if (!x || typeof x !== 'object' || x.id === undefined || typeof x.p1 !== 'string' || typeof x.p2 !== 'string' || !Array.isArray(x.sets)) return null;
+      const sets = x.sets.map(s => {
+        const a = Number(s && s.a), b = Number(s && s.b);
+        if (!Number.isInteger(a) || !Number.isInteger(b) || a < 0 || b < 0 || a === b) return null;
+        let tb = null;
+        if (s.tb && Array.isArray(s.tb) && s.tb.length === 2 && s.tb.every(n => Number.isInteger(Number(n)) && Number(n) >= 0)) tb = [Number(s.tb[0]), Number(s.tb[1])];
+        return { a, b, tb };
+      });
+      if (!sets.length || sets.some(s => !s)) return null;
+      let setsA = 0, setsB = 0, gamesA = 0, gamesB = 0;
+      sets.forEach(s => { if (s.a > s.b) setsA++; else setsB++; gamesA += s.a; gamesB += s.b; });
+      if (setsA === setsB) return null;
+      return { id: Number(x.id), date: String(x.date || ''), p1: x.p1, p2: x.p2, bestOf: Number(x.bestOf) || sets.length, sets, setsA, setsB, gamesA, gamesB, winner: setsA > setsB ? x.p1 : x.p2 };
+    }
+    let sPeriod = (() => { try { const v = localStorage.getItem('tennis_singles_period'); return PERIOD_LABEL[v] ? v : 'all'; } catch (e) { return 'all'; } })();
+    function setSinglePeriod(v) {
+      sPeriod = v;
+      try { localStorage.setItem('tennis_singles_period', v); } catch (e) {}
+      renderSingleAll();
+    }
+    function sFiltered() {
+      const all = sSorted();
+      if (sPeriod === 'all') return all;
+      const t = todayLocal();
+      const prefix = sPeriod === 'year' ? t.slice(0, 4) : t.slice(0, 7);
+      return all.filter(m => String(m.date || '').startsWith(prefix));
+    }
+    const sEmptyHTML = () => `<p style="color:var(--text-muted); font-size:0.85rem">${sPeriod === 'all' ? 'Henüz kayıtlı tekli maç yok.' : 'Bu dönemde kayıtlı tekli maç yok.'}</p>`;
+    function syncSingleTitles() {
+      const suffix = sPeriod === 'all' ? '' : ' · ' + PERIOD_LABEL[sPeriod];
+      sEl('s-standings-title').innerText = 'Tekli Puan Durumu' + suffix;
+      sEl('s-stats-title').innerText = 'Genel İstatistikler' + suffix;
+      document.querySelectorAll('#s-period-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.speriod === sPeriod));
+    }
+
+    function sSorted() {
+      return getSingles().map(sNormalize).filter(Boolean)
+        .sort((a, b) => String(a.date).localeCompare(String(b.date)) || (a.id - b.id));
+    }
+    const sSig = m => [m.date, m.p1, m.p2, m.sets.map(s => s.a + '-' + s.b).join(',')].join('#');
+
+    function fmtSet(s, flip) {
+      const a = flip ? s.b : s.a, b = flip ? s.a : s.b;
+      return `${a}-${b}${s.tb ? '(' + Math.min(s.tb[0], s.tb[1]) + ')' : ''}`;
+    }
+    const fmtSets = (m, flip) => m.sets.map(s => fmtSet(s, flip)).join(' ');
+
+    // m'yi A oyuncusunun gözünden döndürür
+    function orient(m, A) {
+      const f = m.p1 !== A;
+      return { date: m.date, id: m.id, opp: f ? m.p1 : m.p2, sa: f ? m.setsB : m.setsA, sb: f ? m.setsA : m.setsB,
+        ga: f ? m.gamesB : m.gamesA, gb: f ? m.gamesA : m.gamesB, win: m.winner === A, flip: f, m };
+    }
+
+    // ----- Form -----
+    function sKnownNames() {
+      const set = new Set();
+      sSorted().forEach(m => { set.add(m.p1); set.add(m.p2); });
+      try { (JSON.parse(localStorage.getItem('tennis_last_players') || '[]') || []).forEach(n => n && set.add(n)); } catch (e) {}
+      try { JSON.parse(localStorage.getItem('tennis_sessions') || '[]').forEach(s => (s.players || []).forEach(n => n && set.add(n))); } catch (e) {}
+      return [...set].sort((a, b) => a.localeCompare(b, 'tr'));
+    }
+    function sCanonName(raw) {
+      const t = raw.trim();
+      const hit = sKnownNames().find(n => n.toLowerCase() === t.toLowerCase());
+      return hit || t;
+    }
+
+    function renderSetRows() {
+      sEl('s-sets').innerHTML = Array.from({ length: sBestOf }, (_, i) => `
+        <div class="set-row" id="srow-${i}">
+          <div class="set-grid">
+            <div class="set-label">${i + 1}. Set</div>
+            <input type="text" inputmode="numeric" maxlength="2" id="sg1-${i}" aria-label="${i + 1}. set, 1. oyuncunun oyun sayısı" value="${esc(sSets[i].a)}" oninput="sInput(${i},'a',this)">
+            <input type="text" inputmode="numeric" maxlength="2" id="sg2-${i}" aria-label="${i + 1}. set, 2. oyuncunun oyun sayısı" value="${esc(sSets[i].b)}" oninput="sInput(${i},'b',this)">
+          </div>
+          <div class="set-grid tb-line" id="strow-${i}" style="display:none; margin-top:6px">
+            <div class="set-label">Tie-break</div>
+            <input type="text" inputmode="numeric" maxlength="2" id="st1-${i}" placeholder="puan" aria-label="${i + 1}. set tie-break, 1. oyuncu" value="${esc(sSets[i].ta)}" oninput="sInput(${i},'ta',this)">
+            <input type="text" inputmode="numeric" maxlength="2" id="st2-${i}" placeholder="puan" aria-label="${i + 1}. set tie-break, 2. oyuncu" value="${esc(sSets[i].tb)}" oninput="sInput(${i},'tb',this)">
+          </div>
+          <div class="set-msg" id="smsg-${i}"></div>
+        </div>`).join('');
+    }
+
+    function sInput(i, key, el) {
+      const v = el.value.replace(/[^0-9]/g, '').slice(0, 2);
+      if (v !== el.value) el.value = v;
+      sSets[i][key] = v;
+      sUpdate();
+    }
+
+    function sSetFormat(n) {
+      sBestOf = n;
+      renderSetRows();
+      sUpdate();
+    }
+
+    function sEvaluate() {
+      const need = (sBestOf + 1) / 2;
+      let wa = 0, wb = 0, ga = 0, gb = 0, decided = false, progress = true, anyInput = false;
+      const rows = [], sets = [];
+      for (let i = 0; i < sBestOf; i++) {
+        if (!progress) { rows.push({ show: false, tb: false, msg: '' }); continue; }
+        const s = sSets[i], row = { show: true, tb: false, msg: '' };
+        rows.push(row);
+        const a = sNum(s.a), b = sNum(s.b);
+        if (a !== null || b !== null) anyInput = true;
+        if (a === null || b === null) { progress = false; continue; }
+        if (!validSetScore(a, b)) {
+          row.msg = 'Geçersiz set skoru (6-0 ... 6-4, 7-5 veya 7-6 olmalı).';
+          progress = false; continue;
+        }
+        let tb = null;
+        if (isTBSet({ a, b })) {
+          row.tb = true;
+          const ta = sNum(s.ta), tbv = sNum(s.tb);
+          if (ta !== null || tbv !== null) {
+            if (ta === null || tbv === null) { row.msg = 'Tie-break puanını iki oyuncu için de girin ya da boş bırakın.'; progress = false; continue; }
+            const aWon = a > b;
+            const w = aWon ? ta : tbv, l = aWon ? tbv : ta;
+            if (!validTB(w, l)) { row.msg = 'Geçersiz tie-break (7\'ye, 2 farkla; en fazla 10-8 veya 10-9).'; progress = false; continue; }
+            tb = [ta, tbv];
+          }
+        }
+        sets.push({ a, b, tb });
+        ga += a; gb += b;
+        if (a > b) wa++; else wb++;
+        if (wa === need || wb === need) { decided = true; progress = false; }
+      }
+      return { complete: decided, wa, wb, ga, gb, sets, rows, anyInput };
+    }
+
+    function sNames() {
+      const n1 = sEl('s-p1').value.trim(), n2 = sEl('s-p2').value.trim();
+      let err = '';
+      if (!n1 || !n2) err = 'İki oyuncunun adını girin.';
+      else if (n1.toLowerCase() === n2.toLowerCase()) err = 'Oyuncu adları farklı olmalı.';
+      return { n1, n2, err };
+    }
+
+    function sUpdate() {
+      const ev = sEvaluate();
+      const { n1, n2, err } = sNames();
+      const d1 = n1 || '1. Oyuncu', d2 = n2 || '2. Oyuncu';
+      sEl('s-head').innerHTML = `<div class="set-grid" style="margin-bottom:6px"><div></div><div class="nm">${esc(d1)}</div><div class="nm">${esc(d2)}</div></div>`;
+      for (let i = 0; i < sBestOf; i++) {
+        const r = ev.rows[i];
+        sEl('srow-' + i).style.display = r.show ? '' : 'none';
+        sEl('strow-' + i).style.display = (r.show && r.tb) ? '' : 'none';
+        sEl('smsg-' + i).innerText = r.msg;
+      }
+      const live = sEl('s-live');
+      if (!ev.anyInput) {
+        live.className = 's-live muted';
+        live.innerText = 'Set skorlarını girin';
+      } else {
+        live.className = 's-live';
+        let t = `${esc(d1)} ${ev.wa} - ${ev.wb} ${esc(d2)} · oyun ${ev.ga}-${ev.gb}`;
+        if (ev.complete) t += ` · Kazanan: <b style="color:var(--primary)">${esc(ev.wa > ev.wb ? d1 : d2)}</b>`;
+        live.innerHTML = t;
+      }
+      const btn = sEl('s-save');
+      btn.disabled = !(ev.complete && !err);
+      btn.innerText = err && ev.complete ? err : 'Maçı Kaydet';
+      try {
+        localStorage.setItem(S_LAST, JSON.stringify({ p1: n1, p2: n2, bestOf: sBestOf }));
+        if (ev.anyInput) localStorage.setItem(S_DRAFT, JSON.stringify({ p1: n1, p2: n2, date: sEl('s-date').value, bestOf: sBestOf, sets: sSets, savedAt: Date.now() }));
+        else localStorage.removeItem(S_DRAFT);
+      } catch (e) {}
+      document.querySelectorAll('#s-format .chip').forEach(c => c.classList.toggle('active', Number(c.dataset.bo) === sBestOf));
+    }
+
+    function clearSingleForm() {
+      sSets = Array.from({ length: 5 }, () => ({ a: '', b: '', ta: '', tb: '' }));
+      renderSetRows();
+      sUpdate();
+    }
+
+    function saveSingle() {
+      const ev = sEvaluate();
+      const { n1, n2, err } = sNames();
+      if (!ev.complete || err) return;
+      const p1 = sCanonName(n1), p2 = sCanonName(n2);
+      const list = getSingles();
+      let id = Date.now();
+      while (list.some(x => x.id === id)) id++;
+      list.unshift({
+        id, date: sEl('s-date').value || todayLocal(), p1, p2, bestOf: sBestOf,
+        sets: ev.sets, setsA: ev.wa, setsB: ev.wb, gamesA: ev.ga, gamesB: ev.gb,
+        winner: ev.wa > ev.wb ? p1 : p2
+      });
+      saveSinglesList(list);
+      sEl('s-p1').value = p1; sEl('s-p2').value = p2;
+      clearSingleForm();
+      renderSingleAll();
+      toast('Maç kaydedildi');
+    }
+
+    // ----- Günün skoru -----
+    function renderSingleDay() {
+      const date = sEl('s-date').value || todayLocal();
+      sEl('s-day-title').innerText = `Günün Skoru · ${formatDate(date)}`;
+      const day = sSorted().filter(m => m.date === date);
+      const wrap = sEl('s-day');
+      if (!day.length) { wrap.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem">Bu tarihte kayıtlı tekli maç yok.</p>'; return; }
+      const groups = {};
+      day.forEach(m => {
+        const k = [m.p1, m.p2].sort().join('\u0000');
+        (groups[k] = groups[k] || { A: m.p1, B: m.p2, list: [] }).list.push(m);
+      });
+      wrap.innerHTML = Object.values(groups).map(g => {
+        let mw = 0, ml = 0, sw = 0, sl = 0, gw = 0, gl = 0;
+        g.list.forEach(m => { const o = orient(m, g.A); o.win ? mw++ : ml++; sw += o.sa; sl += o.sb; gw += o.ga; gl += o.gb; });
+        return `<div class="rec-row">
+          <div><div class="rec-label">${esc(g.A)} - ${esc(g.B)}</div>
+            <div class="rec-val">Set ${sw}-${sl} <span style="color:var(--text-muted); font-weight:600">· Oyun ${gw}-${gl}</span></div>
+            <div class="s-note">${g.list.length} maç: ${esc(g.A)} ${mw} - ${ml} ${esc(g.B)}</div></div>
+          <div class="rec-num">${sw}-${sl}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // ----- Puan durumu -----
+    function sStandings(list) {
+      const st = {};
+      const g = n => st[n] = st[n] || { name: n, o: 0, w: 0, l: 0, sw: 0, sl: 0, gw: 0, gl: 0, tw: 0, tl: 0 };
+      list.forEach(m => {
+        const a = g(m.p1), b = g(m.p2);
+        a.o++; b.o++;
+        if (m.winner === m.p1) { a.w++; b.l++; } else { b.w++; a.l++; }
+        a.sw += m.setsA; a.sl += m.setsB; b.sw += m.setsB; b.sl += m.setsA;
+        a.gw += m.gamesA; a.gl += m.gamesB; b.gw += m.gamesB; b.gl += m.gamesA;
+        m.sets.forEach(s => { if (isTBSet(s)) { if (s.a > s.b) { a.tw++; b.tl++; } else { b.tw++; a.tl++; } } });
+      });
+      const rate = x => x.o ? x.w / x.o : 0;
+      const byRate = sSort === 'rate';
+      return Object.values(st).sort((x, y) =>
+        (byRate ? rate(y) - rate(x) : 0) || y.w - x.w || (y.sw - y.sl) - (x.sw - x.sl) || (y.gw - y.gl) - (x.gw - x.gl) || x.name.localeCompare(y.name, 'tr'));
+    }
+
+    let sSort = (() => { try { return localStorage.getItem('tennis_singles_sort') === 'rate' ? 'rate' : 'wins'; } catch (e) { return 'wins'; } })();
+    function setSingleSort(v) {
+      sSort = v;
+      try { localStorage.setItem('tennis_singles_sort', v); } catch (e) {}
+      renderSingleAll();
+    }
+    const sPct = x => '%' + Math.round((x.o ? x.w / x.o : 0) * 100);
+
+    function renderSingleStandings() {
+      document.querySelectorAll('#s-sort-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.ssort === sSort));
+      const wrap = sEl('s-standings');
+      const rows = sStandings(sFiltered());
+      if (!rows.length) { wrap.innerHTML = sEmptyHTML(); return; }
+      wrap.innerHTML = `<table><thead><tr><th>#</th><th>Oyuncu</th><th>O</th><th>G</th><th>M</th><th>Oran</th><th>Set</th><th>Oyun</th></tr></thead><tbody>` +
+        rows.map((r, i) => `<tr class="clickable" data-name="${esc(r.name)}" onclick="openProfile(this.dataset.name, 'single')"><td class="rank-num">${i + 1}</td><td style="font-weight:700; color:#fff">${esc(r.name)} <span style="color:var(--text-muted); font-weight:400">›</span></td><td>${r.o}</td><td style="color:#4ade80; font-weight:800">${r.w}</td><td style="color:#f87171; font-weight:800">${r.l}</td><td style="font-weight:800; color:#fff">${sPct(r)}</td><td>${r.sw}-${r.sl}</td><td>${r.gw}-${r.gl}</td></tr>`).join('') +
+        '</tbody></table>';
+    }
+
+    // ----- İkili karşılaşma -----
+    function setSH2H(which, val) { if (which === 'A') sH2HA = val; else sH2HB = val; renderSingleH2H(); }
+
+    function renderSingleH2H() {
+      const wrap = sEl('s-h2h');
+      const all = sFiltered();
+      const names = sStandings(all).map(x => x.name).sort((a, b) => a.localeCompare(b, 'tr'));
+      if (names.length < 2) { wrap.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem">İki oyuncu için yeterli kayıtlı veri yok.</p>'; return; }
+      if (!names.includes(sH2HA)) sH2HA = names[0];
+      if (!names.includes(sH2HB) || sH2HB === sH2HA) sH2HB = names.find(n => n !== sH2HA);
+      const opts = sel => names.map(n => `<option value="${esc(n)}" ${n === sel ? 'selected' : ''}>${esc(n)}</option>`).join('');
+      const games = all.filter(m => (m.p1 === sH2HA && m.p2 === sH2HB) || (m.p1 === sH2HB && m.p2 === sH2HA));
+      let body;
+      if (!games.length) {
+        body = '<p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px">Bu iki oyuncu arasında kayıtlı maç yok.</p>';
+      } else {
+        let wA = 0, wB = 0, sA = 0, sB = 0, gA = 0, gB = 0, tA = 0, tB = 0;
+        const rows = games.slice().reverse().map(m => {
+          const o = orient(m, sH2HA);
+          o.win ? wA++ : wB++;
+          sA += o.sa; sB += o.sb; gA += o.ga; gB += o.gb;
+          m.sets.forEach(s => { if (isTBSet(s)) { const aw = o.flip ? s.b > s.a : s.a > s.b; aw ? tA++ : tB++; } });
+          return `<tr><td style="font-weight:700; color:#fff">${formatDate(m.date)}</td><td>${fmtSets(m, o.flip)}</td><td class="${o.win ? 'm-win' : 'm-loss'}">${o.sa}-${o.sb}</td></tr>`;
+        }).join('');
+        const tot = games.length;
+        body = `
+          <div class="h2h-score">
+            <div><div class="nm">${esc(sH2HA)}</div><div class="big" style="color:var(--primary)">${wA}</div></div>
+            <div><div class="nm" style="color:var(--text-muted)">Maç</div><div class="big" style="color:var(--text-muted); font-size:1.4rem">${tot}</div></div>
+            <div><div class="nm">${esc(sH2HB)}</div><div class="big" style="color:var(--accent)">${wB}</div></div>
+          </div>
+          <div class="h2h-bar">
+            <div style="width:${wA / tot * 100}%; background:var(--primary)"></div>
+            <div style="width:${wB / tot * 100}%; background:var(--accent)"></div>
+          </div>
+          <div class="detail-sub" style="text-align:center; margin-bottom:6px">Set ${sA}-${sB} · Oyun ${gA}-${gB}${(tA + tB) ? ` · Tie-break ${tA}-${tB}` : ''}</div>
+          <div class="table-scroll" style="max-height:260px; overflow-y:auto">
+            <table><thead><tr><th>Tarih</th><th>${esc(sH2HA)} - ${esc(sH2HB)}</th><th>Set</th></tr></thead><tbody>${rows}</tbody></table>
+          </div>`;
+      }
+      wrap.innerHTML = `<div class="h2h-selects">
+          <select onchange="setSH2H('A', this.value)" aria-label="1. oyuncu">${opts(sH2HA)}</select>
+          <span style="color:var(--primary); font-weight:800; font-size:0.8rem">VS</span>
+          <select onchange="setSH2H('B', this.value)" aria-label="2. oyuncu">${opts(sH2HB)}</select>
+        </div>${body}`;
+    }
+
+    // ----- Genel istatistik -----
+    function renderSingleStats() {
+      const wrap = sEl('s-stats');
+      const all = sFiltered();
+      if (!all.length) { wrap.innerHTML = sEmptyHTML(); return; }
+      const st = sStandings(all);
+      const totSets = all.reduce((n, m) => n + m.sets.length, 0);
+      const totGames = all.reduce((n, m) => n + m.gamesA + m.gamesB, 0);
+      const muted = t => `<span style="color:var(--text-muted); font-weight:600">${t}</span>`;
+      const lines = (arr, fn) => arr.map(fn).join('<br>');
+      const none = '<div class="rec-val" style="color:var(--text-muted); font-weight:600">Henüz yok</div>';
+
+      // Galibiyet serisi
+      const cur = {}, best = {}, start = {}, range = {};
+      all.forEach(m => {
+        [[m.p1, m.winner === m.p1], [m.p2, m.winner === m.p2]].forEach(([n, won]) => {
+          if (won) {
+            if (!cur[n]) start[n] = m.date;
+            cur[n] = (cur[n] || 0) + 1;
+            if (cur[n] > (best[n] || 0)) { best[n] = cur[n]; range[n] = [start[n], m.date]; }
+          } else cur[n] = 0;
+        });
+      });
+      const maxStreak = Math.max(0, ...Object.values(best));
+      const streakList = maxStreak >= 2 ? Object.keys(best).filter(n => best[n] === maxStreak) : [];
+      const rng = n => { const [a, b] = range[n]; return a === b ? formatDate(a) : `${formatDate(a)} - ${formatDate(b)}`; };
+
+      // Galibiyet yüzdesi (en az 3 maç)
+      const elig = st.filter(x => x.o >= 3);
+      const bestPct = elig.length ? Math.max(...elig.map(x => x.w / x.o)) : -1;
+      const pctList = elig.filter(x => x.w / x.o === bestPct);
+
+      // En çok yenilen rakip
+      const losses = {};
+      all.forEach(m => {
+        const [loser, winner] = m.winner === m.p1 ? [m.p2, m.p1] : [m.p1, m.p2];
+        const k = loser + '\u0000' + winner;
+        losses[k] = (losses[k] || 0) + 1;
+      });
+      const maxLoss = Math.max(0, ...Object.values(losses));
+      const lossList = maxLoss >= 2 ? Object.keys(losses).filter(k => losses[k] === maxLoss).map(k => k.split('\u0000')) : [];
+
+      // Tie-break
+      const maxTB = Math.max(0, ...st.map(x => x.tw));
+      const tbList = maxTB >= 1 ? st.filter(x => x.tw === maxTB) : [];
+
+      wrap.innerHTML = `
+        <div class="stat-chips" style="margin-bottom:6px">
+          <div class="stat-chip"><b>${all.length}</b><span>Maç</span></div>
+          <div class="stat-chip"><b>${st.length}</b><span>Oyuncu</span></div>
+          <div class="stat-chip"><b>${totSets}</b><span>Set</span></div>
+          <div class="stat-chip"><b>${totGames}</b><span>Oyun</span></div>
+        </div>
+        <div class="rec-row">
+          <div><div class="rec-label">En Uzun Galibiyet Serisi</div>
+            ${streakList.length ? `<div class="rec-val">${lines(streakList, n => `${esc(n)} ${muted('· ' + rng(n))}`)}</div>` : none}</div>
+          <div class="rec-num">${streakList.length ? maxStreak : '-'}</div>
+        </div>
+        <div class="rec-row">
+          <div><div class="rec-label">En Yüksek Galibiyet Oranı</div>
+            ${pctList.length ? `<div class="rec-val">${lines(pctList, x => `${esc(x.name)} ${muted('· ' + x.w + '/' + x.o + ' maç')}`)}</div>` : '<div class="rec-val" style="color:var(--text-muted); font-weight:600">En az 3 maç gerekir</div>'}</div>
+          <div class="rec-num">${pctList.length ? '%' + Math.round(bestPct * 100) : '-'}</div>
+        </div>
+        <div class="rec-row">
+          <div><div class="rec-label">En Çok Yenilen Rakip</div>
+            ${lossList.length ? `<div class="rec-val">${lines(lossList, ([l, w]) => `${esc(l)} ${muted('← ' + esc(w))}`)}</div>` : none}</div>
+          <div class="rec-num">${lossList.length ? maxLoss : '-'}</div>
+        </div>
+        <div class="rec-row">
+          <div><div class="rec-label">En Çok Tie-break Kazanan</div>
+            ${tbList.length ? `<div class="rec-val">${lines(tbList, x => `${esc(x.name)} ${muted('· ' + x.tw + '-' + x.tl)}`)}</div>` : none}</div>
+          <div class="rec-num">${tbList.length ? maxTB : '-'}</div>
+        </div>`;
+    }
+
+    // ----- Maç geçmişi -----
+    function setSHistFilter(k, v) { sHistF[k] = v; sHistF.limit = PAGE; renderSingleHistory(); }
+    function moreSingles() { sHistF.limit += PAGE; renderSingleHistory(); }
+
+    function renderSingleHistory() {
+      const wrap = sEl('s-history'), bar = sEl('s-hist-filters');
+      const all = sSorted().reverse();
+      if (!all.length) {
+        bar.innerHTML = '';
+        wrap.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem">Henüz kayıtlı tekli maç yok.</p>';
+        return;
+      }
+      const players = [...new Set(all.flatMap(m => [m.p1, m.p2]))].sort((a, b) => a.localeCompare(b, 'tr'));
+      const months = [...new Set(all.map(m => String(m.date || '').slice(0, 7)))].filter(Boolean);
+      if (sHistF.player && !players.includes(sHistF.player)) sHistF.player = '';
+      if (sHistF.month && !months.includes(sHistF.month)) sHistF.month = '';
+      const items = all.filter(m => (!sHistF.player || m.p1 === sHistF.player || m.p2 === sHistF.player) &&
+        (!sHistF.month || String(m.date || '').startsWith(sHistF.month)));
+      bar.innerHTML = (all.length > 3 ? filterBarHTML('setSHistFilter', players, months, sHistF) : '') +
+        `<div class="detail-sub" style="margin-bottom:0">${items.length === all.length ? all.length + ' maç' : items.length + ' / ' + all.length + ' maç'}</div>`;
+      if (!items.length) { wrap.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem; margin-top:10px">Bu filtreyle eşleşen maç yok.</p>'; return; }
+      wrap.innerHTML = groupedHTML(items, sHistF.limit, 'maç', m => `
+        <div class="history-item">
+          <div style="min-width:0">
+            <div style="font-weight:700; font-size:0.92rem; color:#fff">${esc(m.p1)} ${m.setsA} - ${m.setsB} ${esc(m.p2)}</div>
+            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px">${formatDate(m.date)} · ${fmtSets(m, false)} · oyun ${m.gamesA}-${m.gamesB}</div>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="deleteSingle(${m.id})">Sil</button>
+        </div>`, 'moreSingles');
+    }
+
+    function deleteSingle(id) {
+      if (!confirm('Bu maç kaydını kalıcı olarak silmek istediğinize emin misiniz?')) return;
+      saveSinglesList(getSingles().filter(x => x.id !== id));
+      renderSingleAll();
+    }
+    function clearSingles() {
+      if (!confirm('Tüm kayıtlı tekli maçları silmek istediğinize emin misiniz?')) return;
+      localStorage.removeItem(S_KEY);
+      renderSingleAll();
+    }
+
+    function exportSingles() {
+      const blob = new Blob([JSON.stringify(sSorted().reverse())], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `tenis_tekliler_yedek_${todayLocal()}.json`;
+      a.click();
+    }
+
+    function importSingles(input) {
+      const file = input.files && input.files[0];
+      input.value = '';
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onerror = () => alert('Dosya okunamadı.');
+      reader.onload = () => {
+        let incoming;
+        try { incoming = JSON.parse(reader.result); } catch (e) { alert('Geçersiz yedek dosyası (JSON okunamadı).'); return; }
+        if (!Array.isArray(incoming)) { alert('Bu dosya bir tekli maç yedeği gibi görünmüyor.'); return; }
+        const valid = incoming.map(sNormalize).filter(Boolean);
+        if (!valid.length) { alert('Dosyada geçerli tekli maç bulunamadı.'); return; }
+        const list = sSorted();
+        const ids = new Set(list.map(m => m.id));
+        const sigCount = {};
+        list.forEach(m => { const k = sSig(m); sigCount[k] = (sigCount[k] || 0) + 1; });
+        const fresh = [];
+        valid.forEach(m => {
+          if (ids.has(m.id)) return;
+          const k = sSig(m);
+          if (sigCount[k] > 0) { sigCount[k]--; ids.add(m.id); return; } // aynı maç başka kimlikle zaten kayıtlı
+          ids.add(m.id); fresh.push(m);
+        });
+        const skipped = valid.length - fresh.length;
+        if (!fresh.length) { alert('Dosyadaki tüm maçlar zaten kayıtlı, eklenecek yeni maç yok.'); return; }
+        if (!confirm(`${fresh.length} yeni maç eklenecek${skipped ? ` (${skipped} maç zaten kayıtlı, atlanacak)` : ''}. Mevcut kayıtlar korunur. Devam edilsin mi?`)) return;
+        saveSinglesList([...getSingles(), ...fresh]);
+        renderSingleAll();
+        alert(`${fresh.length} maç içe aktarıldı.`);
+      };
+      reader.readAsText(file);
+    }
+
+    function renderSingleAll() {
+      syncSingleTitles();
+      sEl('s-names').innerHTML = sKnownNames().map(n => `<option value="${esc(n)}"></option>`).join('');
+      renderSingleDay();
+      renderSingleStandings();
+      renderSingleH2H();
+      renderSingleStats();
+      renderSingleHistory();
+    }
+
+    function renderSingles() {
+      if (!sReady) {
+        sReady = true;
+        sEl('s-date').value = todayLocal();
+        try {
+          const last = JSON.parse(localStorage.getItem(S_LAST) || 'null');
+          if (last) {
+            sEl('s-p1').value = last.p1 || ''; sEl('s-p2').value = last.p2 || '';
+            if ([1, 3, 5].includes(last.bestOf)) sBestOf = last.bestOf;
+          }
+        } catch (e) {}
+        let restored = false;
+        try {
+          const d = JSON.parse(localStorage.getItem(S_DRAFT) || 'null');
+          if (d && Array.isArray(d.sets) && d.sets.some(x => x && (x.a || x.b))) {
+            if ([1, 3, 5].includes(d.bestOf)) sBestOf = d.bestOf;
+            sSets = Array.from({ length: 5 }, (_, i) => {
+              const x = d.sets[i] || {};
+              const c = v => String(v === undefined || v === null ? '' : v).replace(/[^0-9]/g, '').slice(0, 2);
+              return { a: c(x.a), b: c(x.b), ta: c(x.ta), tb: c(x.tb) };
+            });
+            sEl('s-p1').value = d.p1 || ''; sEl('s-p2').value = d.p2 || '';
+            if (/^\d{4}-\d{2}-\d{2}$/.test(d.date || '')) sEl('s-date').value = d.date;
+            restored = true;
+          }
+        } catch (e) {}
+        renderSetRows();
+        sUpdate();
+        if (restored) toast('Yarım kalan tekli maç geri yüklendi');
+      }
+      renderSingleAll();
+    }
+
+    function onSingleDate() { sUpdate(); renderSingleDay(); }
+
+
+    // ---------- Sekmeler arası parmakla kaydırma ----------
+    (function () {
+      let x0 = 0, y0 = 0, t0 = 0, ok = false;
+      const blocked = el => {
+        for (let n = el; n && n !== document.body; n = n.parentElement) {
+          const tag = n.tagName;
+          if ((tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') && n === document.activeElement) return true;
+          if (n.classList && n.classList.contains('modal')) return true;
+          if (n.scrollWidth > n.clientWidth + 2) {
+            const ox = getComputedStyle(n).overflowX;
+            if (ox === 'auto' || ox === 'scroll') return true;
+          }
+        }
+        return false;
+      };
+      document.addEventListener('touchstart', e => {
+        if (e.touches.length !== 1) { ok = false; return; }
+        const t = e.touches[0];
+        x0 = t.clientX; y0 = t.clientY; t0 = Date.now();
+        ok = !blocked(e.target) && !document.querySelector('.modal.open');
+      }, { passive: true });
+      document.addEventListener('touchend', e => {
+        if (!ok) return;
+        ok = false;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - x0, dy = t.clientY - y0;
+        if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.6 || Date.now() - t0 > 700) return;
+        const cur = TAB_ORDER.findIndex(id => document.getElementById(id).style.display !== 'none');
+        if (cur < 0) return;
+        const next = (cur + (dx < 0 ? 1 : -1) + TAB_ORDER.length) % TAB_ORDER.length;
+        switchTab(TAB_ORDER[next], document.querySelectorAll('.tab-btn')[next], dx < 0 ? 1 : -1);
+        window.scrollTo({ top: 0 });
+      }, { passive: true });
+    })();
 
     // ---------- Toast ----------
     let toastTimer = null;
