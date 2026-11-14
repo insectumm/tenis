@@ -507,8 +507,43 @@
       return pairs;
     }
 
-    function generateRound(players, roundNum) {
-      const base = buildPairs(players).map(([p1, p2]) => ({
+    // 4 oyuncu için hazır tur sırası (A,B,C,D = karışık sıradaki oyuncular).
+    // Kurallar: kimse 3 maç art arda oynamaz/dinlenmez, aynı eşleşme en az 4 maç sonra tekrar eder,
+    // art arda oynama/dinlenme sayısı oyuncular arasında en fazla birkaç fark eder.
+    const FOUR_TABLE = [["AB", "CD", "AC", "BD", "AD", "BC"], ["AC", "BD", "CD", "AB", "AD", "BC"], ["BD", "AC", "AD", "BC", "AB", "CD"], ["AC", "BD", "AD", "BC", "AB", "CD"], ["BD", "AC", "AB", "CD", "BC", "AD"], ["AB", "CD", "AC", "BD", "BC", "AD"], ["AC", "BD", "BC", "AD", "CD", "AB"], ["BC", "AD", "BD", "AC", "CD", "AB"], ["AD", "BC", "CD", "AB", "AC", "BD"], ["BC", "AD", "CD", "AB", "AC", "BD"], ["AD", "BC", "AC", "BD", "AB", "CD"], ["AC", "BD", "BC", "AD", "AB", "CD"]];
+
+    let fixtureOrder = null; // oyuncuların bu seanstaki (karışık) yerleşim sırası; 3 ve 4 kişide kullanılır
+
+    function shuffled(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function fixtureSlots(players, order) {
+      return (order && order.length === players.length && order.every(n => players.includes(n))) ? order : players;
+    }
+
+    function generateRound(players, roundNum, order) {
+      const n = players.length;
+      const ord = fixtureSlots(players, order);
+      if (n === 4) {
+        const blk = Math.floor((roundNum - 1) / FOUR_TABLE.length);
+        const L = ch => (ch.charCodeAt(0) - 65 + blk) % 4;
+        return FOUR_TABLE[(roundNum - 1) % FOUR_TABLE.length].map((pr, idx) => {
+          const p1 = ord[L(pr[0])], p2 = ord[L(pr[1])];
+          return {
+            id: `r${roundNum}_m${idx + 1}_${Date.now()}`,
+            round: roundNum, p1, p2,
+            rest: players.filter(p => p !== p1 && p !== p2),
+            score1: null, score2: null
+          };
+        });
+      }
+      const base = buildPairs(n === 3 ? ord : players).map(([p1, p2]) => ({
         p1, p2, rest: players.filter(p => p !== p1 && p !== p2)
       }));
       const shift = ((roundNum - 1) * players.length) % base.length;
@@ -535,7 +570,8 @@
       undoStack = []; justSaved = false;
       currentSessionId = Date.now();
       try { localStorage.setItem('tennis_last_players', JSON.stringify(currentPlayers)); } catch (e) {}
-      matches = generateRound(currentPlayers, 1);
+      fixtureOrder = (currentPlayers.length === 3 || currentPlayers.length === 4) ? shuffled(currentPlayers) : null;
+      matches = generateRound(currentPlayers, 1, fixtureOrder);
       
       document.getElementById('setup-card').style.display = 'none';
       document.getElementById('fixture-container').style.display = 'block';
@@ -573,7 +609,7 @@
       const existingRounds = matches.map(m => m.round);
       const maxRound = existingRounds.length > 0 ? Math.max(...existingRounds) : 0;
       const nextRoundNum = maxRound + 1;
-      const newRoundMatches = generateRound(currentPlayers, nextRoundNum);
+      const newRoundMatches = generateRound(currentPlayers, nextRoundNum, fixtureOrder);
       matches = [...matches, ...newRoundMatches];
       renderMatches();
     }
@@ -601,6 +637,7 @@
       if (!skipConfirm && !confirm("Mevcut ekranı sıfırlayıp yeni oyuncu/seans girişine dönmek istiyor musunuz?")) return;
       matches = [];
       currentSessionId = null;
+      fixtureOrder = null;
       undoStack = []; justSaved = false; updateUndoBtn();
       ['saved-banner', 'match-list', 'summary-card', 'progress-card'].forEach(id => { document.getElementById(id).innerHTML = ''; });
       clearDraft();
@@ -1276,7 +1313,7 @@
       const date = document.getElementById('session-date').value || todayLocal();
       const sessionId = currentSessionId || Date.now();
       currentSessionId = sessionId;
-      const session = { id: sessionId, date, players: currentPlayers, matches, standings: computeStats() };
+      const session = { id: sessionId, date, players: currentPlayers, order: fixtureOrder, matches, standings: computeStats() };
       let history = JSON.parse(localStorage.getItem('tennis_sessions') || '[]');
       
       let existingIdx = history.findIndex(s => s.id === sessionId);
@@ -1317,6 +1354,7 @@
       undoStack = []; justSaved = false;
       currentSessionId = found.id;
       currentPlayers = found.players;
+      fixtureOrder = Array.isArray(found.order) ? found.order : null;
       matches = found.matches;
       playerCount = Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, found.players.length));
       renderPlayerInputs(found.players);
@@ -1496,6 +1534,7 @@
           id: currentSessionId,
           date: document.getElementById('session-date').value,
           players: currentPlayers,
+          order: fixtureOrder,
           matches,
           savedAt: Date.now()
         }));
@@ -1543,6 +1582,7 @@
       undoStack = []; justSaved = false;
       currentSessionId = d.id || null;
       currentPlayers = d.players;
+      fixtureOrder = Array.isArray(d.order) ? d.order : null;
       matches = d.matches;
       playerCount = Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, d.players.length));
       renderPlayerInputs(d.players);
