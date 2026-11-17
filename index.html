@@ -165,6 +165,7 @@
     .rec-row:last-child { border-bottom: none; padding-bottom: 0; }
     .rec-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 700; }
     .rec-val { font-size: 0.95rem; font-weight: 800; color: #fff; margin-top: 3px; line-height: 1.35; }
+    .more-link { display:block; margin-top:6px; background:none; border:none; padding:2px 0; color:var(--primary); font:inherit; font-size:0.8rem; font-weight:700; cursor:pointer; }
     .rec-num { font-size: 1.5rem; font-weight: 900; color: var(--primary); white-space: nowrap; }
     .tb-sup { font-size: 0.68em; line-height: 0; vertical-align: super; font-weight: 700; margin-left: 1px; opacity: .85; }
     .h2h-selects { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 12px; }
@@ -974,6 +975,69 @@
       return seq;
     }
 
+    // ---- Rekor yardımcıları ----
+    // İlk 3 satır görünür, fazlası "Daha fazla göster" ile açılır
+    function listMore(arr, fn, max = 3) {
+      const h = arr.map(fn);
+      if (h.length <= max) return h.join('<br>');
+      const rest = h.length - max;
+      return h.slice(0, max).join('<br>') +
+        `<span class="more-body" style="display:none"><br>${h.slice(max).join('<br>')}</span>` +
+        `<button type="button" class="more-link" data-n="${rest}" onclick="toggleMore(this)">Daha fazla göster (+${rest})</button>`;
+    }
+    function toggleMore(btn) {
+      const body = btn.previousElementSibling;
+      const open = body.style.display === 'none';
+      body.style.display = open ? '' : 'none';
+      btn.textContent = open ? 'Daha az göster' : `Daha fazla göster (+${btn.dataset.n})`;
+    }
+    const fmtRange = r => r[0] === r[1] ? formatDate(r[0]) : `${formatDate(r[0])} - ${formatDate(r[1])}`;
+    // events: [{date, res:[[oyuncu,'W'|'D'|'L'], ...]}] (tarih sırasıyla)
+    // win: yalnız G | unb (yenilmezlik): G veya B | loss: yalnız M. Başka sonuç seriyi bozar.
+    function streakCalc(events) {
+      const kinds = { win: r => r === 'W', unb: r => r !== 'L', loss: r => r === 'L' };
+      const out = {};
+      Object.entries(kinds).forEach(([k, test]) => {
+        const cur = {}, start = {}, end = {}, best = {}, range = {};
+        events.forEach(ev => ev.res.forEach(([n, r]) => {
+          if (test(r)) {
+            if (!cur[n]) start[n] = ev.date;
+            cur[n] = (cur[n] || 0) + 1; end[n] = ev.date;
+            if (cur[n] > (best[n] || 0)) { best[n] = cur[n]; range[n] = [start[n], ev.date]; }
+          } else cur[n] = 0;
+        }));
+        const curRange = {};
+        Object.keys(cur).forEach(n => { if (cur[n]) curRange[n] = [start[n], end[n]]; });
+        out[k] = { best, range, cur, curRange };
+      });
+      return out;
+    }
+    // Seri rekor satırları: mevcut seri (>=2), yenilmezlik (isteğe bağlı), mağlubiyet serisi
+    function extraStreakRows(sk, withUnb) {
+      const muted = t => `<span style="color:var(--text-muted); font-weight:600">${t}</span>`;
+      const none = '<div class="rec-val" style="color:var(--text-muted); font-weight:600">Henüz yok</div>';
+      const row = (label, body, num) => `
+        <div class="rec-row">
+          <div><div class="rec-label">${label}</div>${body}</div>
+          <div class="rec-num">${num}</div>
+        </div>`;
+      const bestRow = (label, k) => {
+        const mx = Math.max(0, ...Object.values(sk[k].best));
+        const names = mx >= 2 ? Object.keys(sk[k].best).filter(n => sk[k].best[n] === mx) : [];
+        return row(label, names.length
+          ? `<div class="rec-val">${listMore(names, n => `${esc(n)} ${muted('· ' + fmtRange(sk[k].range[n]))}`)}</div>` : none,
+          names.length ? mx : '-');
+      };
+      const curNames = Object.keys(sk.win.cur).filter(n => sk.win.cur[n] >= 2)
+        .sort((a, b) => sk.win.cur[b] - sk.win.cur[a] || a.localeCompare(b, 'tr'));
+      let h = row('Mevcut Galibiyet Serisi', curNames.length
+        ? `<div class="rec-val">${listMore(curNames, n => `${esc(n)} ${muted('· ' + sk.win.cur[n] + ' maç · ' + fmtRange(sk.win.curRange[n]))}`)}</div>` : none,
+        curNames.length ? sk.win.cur[curNames[0]] : '-');
+      if (withUnb) h += bestRow('En Uzun Yenilmezlik Serisi', 'unb');
+      h += bestRow('En Uzun Mağlubiyet Serisi', 'loss');
+      return h;
+    }
+
     function renderRecords() {
       const wrap = document.getElementById('records-wrap');
       const seq = scoredSequence();
@@ -982,7 +1046,7 @@
         return;
       }
       const muted = t => `<span style="color:var(--text-muted); font-weight:600">${t}</span>`;
-      const lines = (arr, fn) => arr.map(fn).join('<br>');
+      const lines = (arr, fn) => listMore(arr, fn);
 
       // 1) En çok puan alınan seans
       let bestPts = -1, bestList = [];
@@ -999,23 +1063,12 @@
         });
       });
 
-      // 2) En uzun galibiyet serisi (beraberlik ve mağlubiyet seriyi bozar)
-      const cur = {}, best = {}, curStart = {}, bestRange = {};
-      seq.forEach(m => {
-        [[m.p1, m.s1, m.s2], [m.p2, m.s2, m.s1]].forEach(([n, a, b]) => {
-          if (a > b) {
-            if (!cur[n]) curStart[n] = m.date;
-            cur[n] = (cur[n] || 0) + 1;
-            if (cur[n] > (best[n] || 0)) { best[n] = cur[n]; bestRange[n] = [curStart[n], m.date]; }
-          } else cur[n] = 0;
-        });
-      });
-      const rangeTxt = n => {
-        const [a, b] = bestRange[n];
-        return a === b ? formatDate(a) : `${formatDate(a)} - ${formatDate(b)}`;
-      };
-      const maxStreak = Math.max(0, ...Object.values(best));
-      const streakList = maxStreak >= 2 ? Object.keys(best).filter(n => best[n] === maxStreak) : [];
+      // 2) Seriler (beraberlik galibiyet ve mağlubiyet serisini bozar; yenilmezliği bozmaz)
+      const res = (a, b) => a > b ? 'W' : a === b ? 'D' : 'L';
+      const sk = streakCalc(seq.map(m => ({ date: m.date, res: [[m.p1, res(m.s1, m.s2)], [m.p2, res(m.s2, m.s1)]] })));
+      const rangeTxt = n => fmtRange(sk.win.range[n]);
+      const maxStreak = Math.max(0, ...Object.values(sk.win.best));
+      const streakList = maxStreak >= 2 ? Object.keys(sk.win.best).filter(n => sk.win.best[n] === maxStreak) : [];
 
       // 3) En çok yenilen rakip (aynı rakibe en çok yenilen oyuncu)
       const losses = {};
@@ -1040,6 +1093,7 @@
             ${streakList.length ? `<div class="rec-val">${lines(streakList, n => `${esc(n)} ${muted('· ' + rangeTxt(n))}`)}</div>` : none}</div>
           <div class="rec-num">${streakList.length ? maxStreak : '-'}</div>
         </div>
+        ${extraStreakRows(sk, true)}
         <div class="rec-row">
           <div><div class="rec-label">En Çok Yenilen Rakip</div>
             ${lossList.length ? `<div class="rec-val">${lines(lossList, ([l, w]) => `${esc(l)} ${muted('← ' + esc(w))}`)}</div>` : none}</div>
@@ -1716,7 +1770,10 @@
 
     function fmtSet(s, flip) {
       const a = flip ? s.b : s.a, b = flip ? s.a : s.b;
-      return `${a}-${b}${s.tb ? '<sup class="tb-sup">' + Math.min(s.tb[0], s.tb[1]) + '</sup>' : ''}`;
+      if (!s.tb) return `${a}-${b}`;
+      // Küçük tie-break sayısı, seti kaybedenin oyun sayısının hemen yanına yazılır
+      const sup = '<sup class="tb-sup">' + Math.min(s.tb[0], s.tb[1]) + '</sup>';
+      return a < b ? `${a}${sup}-${b}` : `${a}-${b}${sup}`;
     }
     const fmtSets = (m, flip) => m.sets.map(s => fmtSet(s, flip)).join(' ');
 
@@ -1989,23 +2046,14 @@
       const totSets = all.reduce((n, m) => n + m.sets.length, 0);
       const totGames = all.reduce((n, m) => n + m.gamesA + m.gamesB, 0);
       const muted = t => `<span style="color:var(--text-muted); font-weight:600">${t}</span>`;
-      const lines = (arr, fn) => arr.map(fn).join('<br>');
+      const lines = (arr, fn) => listMore(arr, fn);
       const none = '<div class="rec-val" style="color:var(--text-muted); font-weight:600">Henüz yok</div>';
 
-      // Galibiyet serisi
-      const cur = {}, best = {}, start = {}, range = {};
-      all.forEach(m => {
-        [[m.p1, m.winner === m.p1], [m.p2, m.winner === m.p2]].forEach(([n, won]) => {
-          if (won) {
-            if (!cur[n]) start[n] = m.date;
-            cur[n] = (cur[n] || 0) + 1;
-            if (cur[n] > (best[n] || 0)) { best[n] = cur[n]; range[n] = [start[n], m.date]; }
-          } else cur[n] = 0;
-        });
-      });
-      const maxStreak = Math.max(0, ...Object.values(best));
-      const streakList = maxStreak >= 2 ? Object.keys(best).filter(n => best[n] === maxStreak) : [];
-      const rng = n => { const [a, b] = range[n]; return a === b ? formatDate(a) : `${formatDate(a)} - ${formatDate(b)}`; };
+      // Seriler (tekli'de beraberlik yok: yenilmezlik = galibiyet serisi, o yüzden ayrıca gösterilmez)
+      const sk = streakCalc(all.map(m => ({ date: m.date, res: [[m.p1, m.winner === m.p1 ? 'W' : 'L'], [m.p2, m.winner === m.p2 ? 'W' : 'L']] })));
+      const maxStreak = Math.max(0, ...Object.values(sk.win.best));
+      const streakList = maxStreak >= 2 ? Object.keys(sk.win.best).filter(n => sk.win.best[n] === maxStreak) : [];
+      const rng = n => fmtRange(sk.win.range[n]);
 
       // Galibiyet yüzdesi (en az 3 maç)
       const elig = st.filter(x => x.o >= 3);
@@ -2043,6 +2091,7 @@
             ${pctList.length ? `<div class="rec-val">${lines(pctList, x => `${esc(x.name)} ${muted('· ' + x.w + '/' + x.o + ' maç')}`)}</div>` : '<div class="rec-val" style="color:var(--text-muted); font-weight:600">En az 3 maç gerekir</div>'}</div>
           <div class="rec-num">${pctList.length ? '%' + Math.round(bestPct * 100) : '-'}</div>
         </div>
+        ${extraStreakRows(sk, false)}
         <div class="rec-row">
           <div><div class="rec-label">En Çok Yenilen Rakip</div>
             ${lossList.length ? `<div class="rec-val">${lines(lossList, ([l, w]) => `${esc(l)} ${muted('← ' + esc(w))}`)}</div>` : none}</div>
